@@ -66,49 +66,49 @@ export default function CommunityFeatures() {
   ]
 
   return (
-    <section className="py-16 px-4 bg-white">
+    <section className="py-8 sm:py-12 md:py-16 px-4 bg-white">
       <div className="container mx-auto">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold mb-4">💬 커뮤니티</h2>
-          <p className="text-gray-600">실시간으로 소통하고 정보를 공유해보세요</p>
+        <div className="text-center mb-8 sm:mb-12">
+          <h2 className="text-2xl sm:text-3xl font-bold mb-4">💬 커뮤니티</h2>
+          <p className="text-sm sm:text-base text-gray-600">실시간으로 소통하고 정보를 공유해보세요</p>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
           {/* 실시간 리뷰 */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Zap className="w-5 h-5" />
+              <CardTitle className="flex items-center space-x-2 text-lg sm:text-xl">
+                <Zap className="w-4 sm:w-5 h-4 sm:h-5" />
                 <span>실시간 리뷰</span>
                 <Badge className="bg-red-500 text-white text-xs">LIVE</Badge>
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
+              <div className="space-y-3 sm:space-y-4">
                 {recentReviews.map((review, index) => (
-                  <div key={index} className="p-3 border rounded-lg hover:bg-gray-50 transition-colors">
-                    <div className="flex items-start space-x-3">
+                  <div key={index} className="p-2 sm:p-3 border rounded-lg hover:bg-gray-50 transition-colors">
+                    <div className="flex items-start space-x-2 sm:space-x-3">
                       <div className="flex-1">
                         <div className="flex items-center space-x-2 mb-1">
-                          <span className="font-medium text-sm">{review.user}</span>
+                          <span className="font-medium text-xs sm:text-sm">{review.user}</span>
                           {review.isNew && (
                             <Badge className="bg-green-500 text-white text-xs">NEW</Badge>
                           )}
                         </div>
-                        <div className="text-sm text-gray-600 mb-1">{review.shop}</div>
+                        <div className="text-xs sm:text-sm text-gray-600 mb-1">{review.shop}</div>
                         <div className="flex items-center space-x-1 mb-2">
                           {[...Array(review.rating)].map((_, i) => (
-                            <span key={i} className="text-yellow-400">⭐</span>
+                            <span key={i} className="text-yellow-400 text-sm">⭐</span>
                           ))}
                         </div>
-                        <p className="text-sm">{review.comment}</p>
+                        <p className="text-xs sm:text-sm">{review.comment}</p>
                         <div className="text-xs text-gray-500 mt-1">{review.time}</div>
                       </div>
                     </div>
                   </div>
                 ))}
               </div>
-              <Button variant="outline" className="w-full mt-4" size="sm">
+              <Button variant="outline" className="w-full mt-3 sm:mt-4 text-xs sm:text-sm" size="sm">
                 더 많은 리뷰 보기
               </Button>
             </CardContent>
@@ -117,32 +117,32 @@ export default function CommunityFeatures() {
           {/* 지역별 채팅방 */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <MessageCircle className="w-5 h-5" />
+              <CardTitle className="flex items-center space-x-2 text-lg sm:text-xl">
+                <MessageCircle className="w-4 sm:w-5 h-4 sm:h-5" />
                 <span>지역별 채팅방</span>
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-3">
+              <div className="space-y-2 sm:space-y-3">
                 {chatRooms.map((room, index) => (
-                  <div key={index} className="p-3 border rounded-lg hover:bg-gray-50 transition-colors cursor-pointer">
+                  <div key={index} className="p-2 sm:p-3 border rounded-lg hover:bg-gray-50 transition-colors cursor-pointer">
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center space-x-2">
-                        <span className="font-medium">{room.region} 지역</span>
+                        <span className="font-medium text-sm sm:text-base">{room.region} 지역</span>
                         {room.active && (
                           <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                         )}
                       </div>
-                      <div className="flex items-center space-x-1 text-sm text-gray-600">
+                      <div className="flex items-center space-x-1 text-xs sm:text-sm text-gray-600">
                         <Users className="w-3 h-3" />
                         <span>{room.members}</span>
                       </div>
                     </div>
-                    <p className="text-sm text-gray-600 truncate">{room.lastMessage}</p>
+                    <p className="text-xs sm:text-sm text-gray-600 truncate">{room.lastMessage}</p>
                   </div>
                 ))}
               </div>
-              <Button variant="outline" className="w-full mt-4" size="sm">
+              <Button variant="outline" className="w-full mt-3 sm:mt-4 text-xs sm:text-sm" size="sm">
                 채팅방 더보기
               </Button>
             </CardContent>
@@ -151,34 +151,34 @@ export default function CommunityFeatures() {
           {/* 실시간 알림 */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Bell className="w-5 h-5" />
+              <CardTitle className="flex items-center space-x-2 text-lg sm:text-xl">
+                <Bell className="w-4 sm:w-5 h-4 sm:h-5" />
                 <span>실시간 알림</span>
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-3">
+              <div className="space-y-2 sm:space-y-3">
                 {notifications.map((notification, index) => (
-                  <div key={index} className={`p-3 border rounded-lg transition-colors ${
+                  <div key={index} className={`p-2 sm:p-3 border rounded-lg transition-colors ${
                     notification.urgent ? 'border-red-200 bg-red-50' : 'hover:bg-gray-50'
                   }`}>
-                    <div className="flex items-start space-x-3">
-                      <span className="text-lg">{notification.icon}</span>
+                    <div className="flex items-start space-x-2 sm:space-x-3">
+                      <span className="text-base sm:text-lg">{notification.icon}</span>
                       <div className="flex-1">
                         <div className="flex items-center space-x-2 mb-1">
-                          <span className="font-medium text-sm">{notification.title}</span>
+                          <span className="font-medium text-xs sm:text-sm">{notification.title}</span>
                           {notification.urgent && (
                             <Badge className="bg-red-500 text-white text-xs">긴급</Badge>
                           )}
                         </div>
-                        <p className="text-sm">{notification.message}</p>
+                        <p className="text-xs sm:text-sm">{notification.message}</p>
                         <div className="text-xs text-gray-500 mt-1">{notification.time}</div>
                       </div>
                     </div>
                   </div>
                 ))}
               </div>
-              <Button variant="outline" className="w-full mt-4" size="sm">
+              <Button variant="outline" className="w-full mt-3 sm:mt-4 text-xs sm:text-sm" size="sm">
                 알림 설정
               </Button>
             </CardContent>
