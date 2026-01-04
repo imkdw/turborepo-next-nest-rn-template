@@ -11,6 +11,7 @@
     "clean": "find . -name \"node_modules\" -type d -prune -exec rm -rf {} + && find . -name \"dist\" -type d -prune -exec rm -rf {} + && find . -name \"tsconfig.tsbuildinfo\" -type f -exec rm -f {} +",
     "api": "pnpm -F api",
     "web": "pnpm -F web",
+    "app": "pnpm -F app",
     "ui": "pnpm -F ui",
     "types": "pnpm -F types",
     "utils": "pnpm -F utils",
