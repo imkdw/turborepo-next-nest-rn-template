@@ -1,0 +1,32 @@
+# Test files
+**/test
+**/*.spec.ts
+**/*.test.ts
+jest.config.ts
+**/jest.config.ts
+
+# Dev tools
+.turbo
+.github
+.vscode
+*.log
+.eslintcache
+
+# Documentation
+*.md
+README.md
+
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Environment
+.env
+.env.*
+
+# Build artifacts
+**/dist
+**/.next
+**/node_modules
+**/.turbo
