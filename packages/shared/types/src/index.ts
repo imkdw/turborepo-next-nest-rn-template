@@ -1,1 +1,1 @@
-export {};
+export * from './exception-response.type';

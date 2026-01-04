@@ -14,6 +14,7 @@
   "dependencies": {
     "@nestjs/common": "^11.0.1",
     "@nestjs/core": "^11.0.1",
+    "@repo/types": "workspace:*",
     "winston": "^3.18.3",
     "nest-winston": "^1.10.2",
     "rxjs": "^7.8.1"
