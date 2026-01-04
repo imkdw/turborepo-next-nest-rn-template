@@ -16,6 +16,7 @@
     "@nestjs/core": "^11.0.1",
     "@repo/types": "workspace:*",
     "winston": "^3.18.3",
+    "winston-transport": "^4.9.0",
     "nest-winston": "^1.10.2",
     "rxjs": "^7.8.1"
   },
