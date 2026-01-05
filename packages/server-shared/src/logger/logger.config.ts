@@ -44,7 +44,7 @@ function getTransports(env: AppEnv, options?: LoggerConfigOptions): winston.tran
   }
 
   if (options?.loki) {
-    const appName = options.appName || 'app';
+    const appName = options.appName ?? 'app';
     const app = `${env}-${appName}`;
 
     return [

@@ -1,8 +1,19 @@
-import baseConfig from '@repo/eslint-config/base';
+import { nestjsConfig } from '@repo/eslint-config/nestjs';
 
 export default [
-  ...baseConfig,
+  ...nestjsConfig,
   {
-    rules: {},
+    ignores: ['eslint.config.js', 'dist/**'],
+  },
+  {
+    languageOptions: {
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+    rules: {
+      'no-console': 'error',
+    },
   },
 ];

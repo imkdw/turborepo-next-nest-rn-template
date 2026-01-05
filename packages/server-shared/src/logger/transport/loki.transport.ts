@@ -38,13 +38,16 @@ export class LokiTransport extends TransportStream {
       (this as TransportStream).emit('logged', info);
     });
 
-    this.sendToLoki(info)
-      .catch(error => {
+    (async () => {
+      try {
+        await this.sendToLoki(info);
+      } catch (error) {
+        // eslint-disable-next-line no-console -- Fallback when logger itself fails
         console.error('Loki logging failed', error);
-      })
-      .finally(() => {
+      } finally {
         callback();
-      });
+      }
+    })();
   }
 
   private async sendToLoki(info: WinstonLogInfo): Promise<void> {
@@ -62,6 +65,7 @@ export class LokiTransport extends TransportStream {
     });
 
     if (!response.ok) {
+      // eslint-disable-next-line no-console -- Fallback when logger itself fails
       console.error('Loki logging failed', {
         status: response.status,
         statusText: response.statusText,

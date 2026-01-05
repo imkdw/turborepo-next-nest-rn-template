@@ -30,7 +30,7 @@ export class LoggingInterceptor implements NestInterceptor {
     if (this.env === APP_ENV.LOCAL) {
       this.logger.debug(`Request started`, {
         context: requestContext,
-        body: this.sanitizeBody(body),
+        body,
       });
     }
 
@@ -72,20 +72,5 @@ export class LoggingInterceptor implements NestInterceptor {
     }
 
     return LOG_LEVEL.INFO;
-  }
-
-  private sanitizeBody(body: Record<string, unknown>): Record<string, unknown> {
-    if (!body || typeof body !== 'object') return body;
-
-    const sensitiveFields = ['password', 'token', 'secret', 'authorization', 'apiKey'];
-    const sanitized = { ...body };
-
-    for (const field of sensitiveFields) {
-      if (field in sanitized) {
-        sanitized[field] = '[REDACTED]';
-      }
-    }
-
-    return sanitized;
   }
 }
