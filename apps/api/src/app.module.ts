@@ -10,6 +10,7 @@ import {
   LoggingInterceptor,
   MyConfigModule,
   MyConfigService,
+  TransformInterceptor,
 } from '@repo/server-shared';
 import { WinstonModule } from 'nest-winston';
 
@@ -29,15 +30,19 @@ import { WinstonModule } from 'nest-winston';
   providers: [
     {
       provide: APP_FILTER,
-      useClass: CustomExceptionFilter,
+      useClass: AllExceptionFilter,
     },
     {
       provide: APP_FILTER,
-      useClass: AllExceptionFilter,
+      useClass: CustomExceptionFilter,
     },
     {
       provide: APP_INTERCEPTOR,
       useClass: LoggingInterceptor,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: TransformInterceptor,
     },
   ],
 })

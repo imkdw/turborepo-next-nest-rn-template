@@ -21,12 +21,12 @@ export class CustomExceptionFilter implements ExceptionFilter {
     const responseBody: ExceptionResponse = {
       statusCode,
       errorCode,
-      message,
       path: httpAdapter.getRequestUrl(ctx.getRequest()),
     };
 
     this.logger.error(`CustomException: ${message}`, {
       ...responseBody,
+      message,
       stack: exception.stack,
     });
 

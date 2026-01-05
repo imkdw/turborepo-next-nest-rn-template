@@ -18,6 +18,8 @@
     "consts": "pnpm -F consts",
     "exception": "pnpm -F exception",
     "setup:local": "docker-compose up -d --wait && pnpm api prisma db push",
+    "setup:test": "docker-compose up -d --wait && cd apps/api && pnpm dotenv -e ../../.env.test -- prisma db push --force-reset",
+    "reset:test": "cd apps/api && pnpm dotenv -e ../../.env.test -- prisma db push --force-reset",
     "prepare": "husky"
   },
   "devDependencies": {

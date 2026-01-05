@@ -1,31 +1,44 @@
-# Test files
+# ========================================
+# Test Files
+# ========================================
 **/test
 **/*.spec.ts
 **/*.test.ts
 jest.config.ts
 **/jest.config.ts
 
-# Dev tools
+# ========================================
+# Development Tools
+# ========================================
 .turbo
 .github
 .vscode
 *.log
 .eslintcache
 
+# ========================================
 # Documentation
+# ========================================
 *.md
+CLAUDE.md
 README.md
 
-# Git
+# ========================================
+# Git (Version Control)
+# ========================================
 .git
 .gitignore
 .gitattributes
 
-# Environment
+# ========================================
+# Environment Variables
+# ========================================
 .env
 .env.*
 
-# Build artifacts
+# ========================================
+# Build Artifacts (Build Artifacts)
+# ========================================
 **/dist
 **/.next
 **/node_modules

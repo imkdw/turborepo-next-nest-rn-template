@@ -31,7 +31,6 @@ export class AllExceptionFilter implements ExceptionFilter {
       : ({
           statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
           errorCode: 'INTERNAL_SERVER_ERROR',
-          message: 'Internal Server Error',
           path: httpAdapter.getRequestUrl(ctx.getRequest()),
           stack: (exception as Error).stack ?? '',
         } satisfies ExceptionResponse);
@@ -39,13 +38,13 @@ export class AllExceptionFilter implements ExceptionFilter {
     const responseBody: ExceptionResponse = {
       statusCode: httpStatus,
       errorCode: exceptionResponse.errorCode || 'UNKNOWN_ERROR',
-      message: exceptionResponse.message,
       path: httpAdapter.getRequestUrl(ctx.getRequest()),
       stack: this.env === APP_ENV.LOCAL ? exceptionResponse.stack : undefined,
     };
 
     this.logger.error('Exception occurred', {
       ...responseBody,
+      message: (exception as Error).message,
       originalStack: (exception as Error).stack,
     });
 

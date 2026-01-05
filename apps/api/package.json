@@ -12,6 +12,7 @@
     "test": "pnpm test:unit && pnpm test:integration",
     "test:unit": "jest --config test/unit/jest.config.ts",
     "test:integration": "jest --config test/integration/jest.config.ts",
+    "test:e2e": "dotenv -e ../../.env.test -- jest --config test/e2e/jest.config.ts",
     "prisma": "dotenv -e ../../.env -- prisma",
     "prisma:generate": "dotenv -e ../../.env -- prisma generate"
   },
@@ -45,6 +46,7 @@
     "@repo/typescript-config": "workspace:*",
     "@types/express": "^5.0.0",
     "@types/jest": "^29.5.14",
+    "@types/supertest": "^6.0.2",
     "@types/node": "^22.13.0",
     "dotenv-cli": "^11.0.0",
     "eslint": "^9.18.0",
