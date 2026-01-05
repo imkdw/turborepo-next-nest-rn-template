@@ -289,7 +289,7 @@ importers:
         version: 10.4.23(postcss@8.5.6)
       eslint:
         specifier: ^9.18.0
-        version: 9.39.1(jiti@2.6.1)
+        version: 9.39.1(jiti@1.21.7)
       postcss:
         specifier: ^8.5.6
         version: 8.5.6
@@ -347,6 +347,9 @@ importers:
       '@nestjs/core':
         specifier: ^11.0.1
         version: 11.1.11(@nestjs/common@11.1.11(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/platform-express@11.1.11)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@repo/consts':
+        specifier: workspace:*
+        version: link:../shared/consts
       '@repo/types':
         specifier: workspace:*
         version: link:../shared/types
@@ -492,7 +495,7 @@ importers:
         version: 10.4.23(postcss@8.5.6)
       eslint:
         specifier: ^9.18.0
-        version: 9.39.1(jiti@1.21.7)
+        version: 9.39.1(jiti@2.6.1)
       postcss:
         specifier: ^8.5.6
         version: 8.5.6

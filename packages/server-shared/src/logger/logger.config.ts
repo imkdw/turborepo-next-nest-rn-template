@@ -1,7 +1,8 @@
+import { APP_ENV, AppEnv } from '@repo/consts';
 import { WinstonModuleOptions } from 'nest-winston';
 import * as winston from 'winston';
 
-import { APP_ENV, AppEnv, LOG_LEVEL, LogLevel } from './logger.const';
+import { LOG_LEVEL, LogLevel } from './logger.const';
 import { LokiTransport, LokiTransportOptions } from './transport';
 
 const { combine, timestamp, ms, errors, splat, colorize, printf, json } = winston.format;

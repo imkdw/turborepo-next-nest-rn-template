@@ -1,6 +1,5 @@
+import { APP_ENV } from '@repo/consts';
 import { z } from 'zod';
-
-import { APP_ENV } from '../logger/logger.const';
 
 export const myConfigSchema = z.object({
   DATABASE_URL: z.string(),

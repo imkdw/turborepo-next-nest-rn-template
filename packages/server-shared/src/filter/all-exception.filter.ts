@@ -1,11 +1,11 @@
 import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus, Inject } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
+import { APP_ENV, AppEnv } from '@repo/consts';
 import { ExceptionResponse } from '@repo/types';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
 
 import { MyConfigService } from '../config';
-import { APP_ENV, AppEnv } from '../logger';
 
 @Catch()
 export class AllExceptionFilter implements ExceptionFilter {

@@ -1,11 +1,12 @@
 import { CallHandler, ExecutionContext, HttpStatus, Inject, Injectable, NestInterceptor } from '@nestjs/common';
+import { APP_ENV, AppEnv } from '@repo/consts';
 import { Request, Response } from 'express';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Observable, catchError, tap, throwError } from 'rxjs';
 import { Logger } from 'winston';
 
 import { MyConfigService } from '../config';
-import { APP_ENV, AppEnv, LOG_LEVEL, LogLevel } from '../logger';
+import { LOG_LEVEL, LogLevel } from '../logger';
 
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {
