@@ -2,7 +2,8 @@ import { AppController } from '@/app.controller';
 import { DatabaseModule } from '@/infra/database';
 import { UserModule } from '@/modules/user/user.module';
 import { Module } from '@nestjs/common';
-import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import {
   AllExceptionFilter,
   createLoggerConfig,
@@ -19,6 +20,9 @@ import { WinstonModule } from 'nest-winston';
     MyConfigModule,
     DatabaseModule,
     UserModule,
+    ThrottlerModule.forRoot({
+      throttlers: [{ ttl: 60000, limit: 100 }],
+    }),
     WinstonModule.forRootAsync({
       useFactory: (configService: MyConfigService) => {
         return createLoggerConfig(configService.get('APP_ENV'));
@@ -35,6 +39,10 @@ import { WinstonModule } from 'nest-winston';
     {
       provide: APP_FILTER,
       useClass: CustomExceptionFilter,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
     },
     {
       provide: APP_INTERCEPTOR,
