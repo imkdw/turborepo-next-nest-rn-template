@@ -1,6 +1,6 @@
-# Turborepo Next.js + NestJS + React Native 템플릿
+# Turborepo Next.js + NestJS + React Native + Electron 템플릿
 
-Next.js 웹, NestJS API, Expo 모바일 앱을 위한 Turborepo 모노레포 템플릿
+Next.js 웹, NestJS API, Expo 모바일 앱, Electron 데스크톱 앱을 위한 Turborepo 모노레포 템플릿
 
 ## 빠른 시작
 
@@ -57,6 +57,7 @@ pnpm dev
 # 개발
 pnpm dev                # 웹 + API 개발 서버
 pnpm dev:mobile         # 모바일 앱 (별도 실행)
+pnpm dev:desktop        # 데스크톱 앱 (별도 실행)
 
 # 빌드 & 검증
 pnpm build              # 전체 빌드
@@ -73,6 +74,7 @@ pnpm api prisma generate # Prisma 클라이언트 생성
 pnpm api <명령어>       # API 패키지
 pnpm web <명령어>       # 웹 패키지
 pnpm mobile <명령어>    # 모바일 패키지
+pnpm desktop <명령어>   # 데스크톱 패키지
 ```
 
 ## 프로젝트 구조
@@ -82,6 +84,7 @@ apps/
   api/        # NestJS 11 백엔드 (Prisma, Swagger)
   web/        # Next.js 16 프론트엔드 (Turbopack, next-intl)
   mobile/     # Expo 54 모바일 (Expo Router)
+  desktop/    # Electron 39 데스크톱 (electron-forge)
 
 packages/
   ui/                    # 공유 React 컴포넌트 (CVA, Tailwind)
@@ -118,6 +121,7 @@ SWAGGER_PASSWORD=password
 | 백엔드   | NestJS 11, Prisma, PostgreSQL      |
 | 웹       | Next.js 16, React 19, Tailwind CSS |
 | 모바일   | Expo 54, React Native 0.81         |
+| 데스크톱 | Electron 39, electron-forge        |
 | 언어     | TypeScript 5.9 (strict)            |
 
 ## 참고

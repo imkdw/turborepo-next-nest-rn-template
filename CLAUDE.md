@@ -1,22 +1,24 @@
 # CLAUDE.md
 
-This is a Turborepo monorepo with Next.js web frontend, NestJS backend API, and Expo React Native mobile app.
+This is a Turborepo monorepo with Next.js web frontend, NestJS backend API, Expo React Native mobile app, and Electron desktop app.
 
 ## Quick Reference
 
-| App     | Location      | Port     | Run               |
-| ------- | ------------- | -------- | ----------------- |
-| API     | `apps/api`    | 8000     | `pnpm dev`        |
-| Web     | `apps/web`    | 3000     | `pnpm dev`        |
-| Mobile  | `apps/mobile` | -        | `pnpm dev:mobile` |
-| Swagger | -             | 8000/api | Auto with API     |
+| App     | Location       | Port     | Run                |
+| ------- | -------------- | -------- | ------------------ |
+| API     | `apps/api`     | 8000     | `pnpm dev`         |
+| Web     | `apps/web`     | 3000     | `pnpm dev`         |
+| Mobile  | `apps/mobile`  | -        | `pnpm dev:mobile`  |
+| Desktop | `apps/desktop` | -        | `pnpm dev:desktop` |
+| Swagger | -              | 8000/api | Auto with API      |
 
 ## Commands
 
 ```bash
 # Development
-pnpm dev                    # Start API + Web (not mobile)
+pnpm dev                    # Start API + Web (not mobile/desktop)
 pnpm dev:mobile             # Start mobile app separately
+pnpm dev:desktop            # Start desktop app separately
 pnpm build                  # Build all packages
 pnpm lint                   # Lint with auto-fix
 pnpm check-types            # TypeScript type check
@@ -53,6 +55,7 @@ apps/
       i18n/                 # Internationalization config
       messages/             # en.json, ko.json
   mobile/                   # Expo 54 mobile app
+  desktop/                  # Electron desktop app (electron-forge)
 
 packages/
   ui/                       # Shared React components (CVA + Tailwind)
@@ -175,6 +178,26 @@ throw new CustomException({
 - Development: `pnpm mobile start`
 - Production: Use EAS Build (not local builds)
 
+## Desktop Patterns (Electron)
+
+### Electron Forge
+
+- Using `electron-forge` with Webpack plugin
+- Main process: `src/index.ts`
+- Renderer process: `src/renderer.ts`
+- Preload script: `src/preload.ts`
+
+### Building
+
+- Development: `pnpm dev:desktop` or `pnpm desktop dev`
+- Package: `pnpm desktop package`
+- Make distributable: `pnpm desktop make`
+
+### Notes
+
+- Electron binary requires manual postinstall in pnpm monorepo
+- Run `node node_modules/.pnpm/electron@*/node_modules/electron/install.js` if electron fails to start
+
 ## Testing
 
 ### API Tests
@@ -244,7 +267,7 @@ SWAGGER_PASSWORD=xxx
 ## Performance Notes
 
 - Turborepo caches builds - use `turbo run build --force` to bypass
-- Dev excludes mobile by default (use `pnpm dev:mobile` separately)
+- Dev excludes mobile and desktop by default (use `pnpm dev:mobile` or `pnpm dev:desktop` separately)
 - Prisma client auto-generates on install
 
 ## Troubleshooting
