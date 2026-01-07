@@ -1,14 +1,14 @@
 import type { ReactNode } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@repo/ui';
 
-interface FeatureCardProps {
+interface Props {
   icon: ReactNode;
   title: string;
   description: string;
   className?: string;
 }
 
-export function FeatureCard({ icon, title, description, className }: FeatureCardProps) {
+export function FeatureCard({ icon, title, description, className }: Props) {
   return (
     <div className={cn('rounded-xl border border-border bg-card p-4 shadow-sm', className)}>
       <div className="flex items-start gap-4">
