@@ -45,7 +45,7 @@ src/
     en.json
     ko.json
     ja.json (if added)
-  middleware.ts             # i18n middleware
+  proxy.ts                  # i18n proxy (Next.js 16+, formerly middleware.ts)
 
 next.config.ts              # Next.js + next-intl config
 tailwind.config.ts          # Tailwind configuration
@@ -67,10 +67,10 @@ export const routing = defineRouting({
 });
 ```
 
-### Middleware
+### Proxy (Next.js 16+)
 
 ```typescript
-// src/middleware.ts
+// src/proxy.ts (formerly middleware.ts)
 import createMiddleware from 'next-intl/middleware';
 import { routing } from './i18n/routing';
 
@@ -217,6 +217,6 @@ import { APP_ENV } from '@repo/consts'; // Constants
 ## Common Issues
 
 - **Hydration 오류**: Server/Client 컴포넌트 경계 확인
-- **i18n 라우팅 오류**: `middleware.ts` matcher 확인
+- **i18n 라우팅 오류**: `proxy.ts` matcher 확인
 - **번역 누락**: `messages/*.json` 키 일치 확인
 - **Turbopack 오류**: `pnpm dev` (Turbopack 없이) 시도
