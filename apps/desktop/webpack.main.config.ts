@@ -1,9 +1,9 @@
-import type { Configuration } from 'webpack';
+import type { WebpackConfiguration } from '@electron-forge/plugin-webpack/dist/Config';
 
 import { rules } from './webpack.rules';
 import { plugins } from './webpack.plugins';
 
-export const mainConfig: Configuration = {
+export const mainConfig: WebpackConfiguration = {
   /**
    * This is the main entry point for your application, it's the first file
    * that runs in the main process.
@@ -13,7 +13,7 @@ export const mainConfig: Configuration = {
   module: {
     rules,
   },
-  plugins,
+  plugins: plugins as unknown as { apply: (compiler: unknown) => void }[],
   resolve: {
     extensions: ['.js', '.ts', '.jsx', '.tsx', '.css', '.json'],
   },
