@@ -489,9 +489,15 @@ importers:
       '@nestjs/core':
         specifier: ^11.0.1
         version: 11.1.11(@nestjs/common@11.1.11(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/platform-express@11.1.11)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@prisma/client':
+        specifier: ^6.5.0
+        version: 6.19.1(prisma@6.19.1(typescript@5.9.2))(typescript@5.9.2)
       '@repo/consts':
         specifier: workspace:*
         version: link:../shared/consts
+      '@repo/exception':
+        specifier: workspace:*
+        version: link:../shared/exception
       '@repo/types':
         specifier: workspace:*
         version: link:../shared/types

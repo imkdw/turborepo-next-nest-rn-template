@@ -1,5 +1,4 @@
 import { AppController } from '@/app.controller';
-import { DatabaseModule } from '@/infra/database';
 import { UserModule } from '@/modules/user/user.module';
 import { Module } from '@nestjs/common';
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
@@ -8,6 +7,7 @@ import {
   AllExceptionFilter,
   createLoggerConfig,
   CustomExceptionFilter,
+  DatabaseModule,
   LoggingInterceptor,
   MyConfigModule,
   MyConfigService,

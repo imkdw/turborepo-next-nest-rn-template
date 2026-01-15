@@ -1,5 +1,5 @@
 import { HttpStatus } from '@nestjs/common';
-import { CustomException } from '@repo/server-shared';
+import { CustomException } from '../filter/custom.exception';
 import { EXCEPTION_CODES } from '@repo/exception';
 
 export class UserNotFoundException extends CustomException {

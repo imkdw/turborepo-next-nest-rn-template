@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { User } from '@prisma/client';
-import { PrismaService } from '@/infra/database';
-import { UserNotFoundException } from '../exception/user-not-found.exception';
+import { PrismaService, UserNotFoundException } from '@repo/server-shared';
 
 @Injectable()
 export class FindUserUseCase {

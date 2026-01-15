@@ -182,7 +182,7 @@ describe('CreateUserDto', () => {
 // test/integration/modules/user/find-user.use-case.spec.ts
 import { Test, TestingModule } from '@nestjs/testing';
 import { FindUserUseCase } from '@/modules/user/use-case/find-user.use-case';
-import { PrismaService } from '@/infra/database';
+import { PrismaService } from '@repo/server-shared';
 
 describe('FindUserUseCase (Integration)', () => {
   let useCase: FindUserUseCase;
