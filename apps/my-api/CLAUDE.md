@@ -216,13 +216,18 @@ describe('FindUserUseCase (Integration)', () => {
 
 ## Environment Variables
 
+환경 변수는 루트 디렉토리의 `.env` 파일에서 중앙 관리됩니다.
+
 ```bash
+# /.env (루트 디렉토리)
 DATABASE_URL=postgresql://...     # Required
 API_PORT=8000                     # Required
 APP_ENV=local|staging|production  # Required
 SWAGGER_USERNAME=xxx              # Required for non-local
 SWAGGER_PASSWORD=xxx              # Required for non-local
 ```
+
+> `dotenv -e ../../.env` 명령어로 루트 `.env`를 참조합니다.
 
 ## Adding New Feature Module
 
@@ -240,4 +245,4 @@ SWAGGER_PASSWORD=xxx              # Required for non-local
 
 - **Prisma 타입 오류**: `pnpm prisma generate` 실행
 - **DB 연결 실패**: Docker 컨테이너 확인 (`docker-compose up -d`)
-- **테스트 DB 오류**: `.env.test` 파일 확인
+- **테스트 DB 오류**: 루트 `.env.test` 파일 확인

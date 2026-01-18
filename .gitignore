@@ -48,3 +48,6 @@ templates/*/.expo
 templates/*/dist
 templates/*/out
 templates/*/.webpack
+
+# Claude Code
+.claude/settings.local.json

@@ -690,6 +690,49 @@ function printNextSteps(appName: string, template: string): void {
       break;
   }
 
+  // Manual checks section
+  console.log(`\n${pc.bold(pc.yellow('⚠ Manual checks required:'))}`);
+
+  // Claude users
+  console.log(`\n  ${pc.cyan('If using Claude Code:')}`);
+  console.log(`    Check ${pc.bold('.claude/settings.local.json')} to allow commands for the new app`);
+  console.log(`    ${pc.dim('Add "Bash(pnpm ' + appName + ' *)" to permissions.allow array')}`);
+
+  // Template-specific manual checks
+  switch (template) {
+    case 'mobile':
+      console.log(`\n  ${pc.cyan('Mobile app setup:')}`);
+      console.log(`    - Update ${pc.bold('app.json')}: display name, expo.ios.bundleIdentifier, expo.android.package`);
+      console.log(`    - Configure EAS project: ${pc.dim('eas init')}`);
+      console.log(`    - Set up app icons and splash screen in ${pc.bold('assets/')} directory`);
+      break;
+    case 'desktop':
+      console.log(`\n  ${pc.cyan('Desktop app setup:')}`);
+      console.log(`    - Update app icons in ${pc.bold('assets/')} directory`);
+      console.log(`    - Configure ${pc.bold('forge.config.ts')} for your platform targets`);
+      console.log(`    - Update ${pc.bold('package.json')} author and description fields`);
+      console.log(`    ${pc.dim('Note: Ports have been auto-allocated to avoid conflicts')}`);
+      break;
+    case 'web':
+      console.log(`\n  ${pc.cyan('Web app setup:')}`);
+      console.log(`    - Update ${pc.bold('src/app/layout.tsx')} metadata (title, description)`);
+      console.log(`    - Add i18n translations in ${pc.bold('src/messages/')} if using next-intl`);
+      console.log(`    - Configure environment variables in ${pc.bold('.env.local')} if needed`);
+      break;
+    case 'api':
+      console.log(`\n  ${pc.cyan('API app setup:')}`);
+      console.log(`    - Set up ${pc.bold('.env')} file with DATABASE_URL and other required variables`);
+      console.log(`    - Run ${pc.dim('pnpm ' + appName + ' prisma db push')} to sync database schema`);
+      console.log(`    - Update CORS origins in ${pc.bold('src/main.ts')} with your production domain`);
+      console.log(`    - Update Swagger title/description in ${pc.bold('src/main.ts')}`);
+      break;
+  }
+
+  // Common checks for all templates
+  console.log(`\n  ${pc.cyan('General:')}`);
+  console.log(`    - Review and update ${pc.bold('apps/' + appName + '/CLAUDE.md')} for project-specific instructions`);
+  console.log(`    - Check ${pc.bold('turbo.json')} if custom build/cache settings are needed`);
+
   console.log('');
 }
 

@@ -4,13 +4,13 @@ This is a Turborepo monorepo with Next.js web frontend, NestJS backend API, Expo
 
 ## Quick Reference
 
-| App     | Location       | Port     | Run                |
-| ------- | -------------- | -------- | ------------------ |
-| API     | `apps/api`     | 8000     | `pnpm dev`         |
-| Web     | `apps/web`     | 3000     | `pnpm dev`         |
-| Mobile  | `apps/mobile`  | -        | `pnpm dev:mobile`  |
-| Desktop | `apps/desktop` | -        | `pnpm dev:desktop` |
-| Swagger | -              | 8000/api | Auto with API      |
+| App     | Location          | Port     | Run                |
+| ------- | ----------------- | -------- | ------------------ |
+| API     | `apps/my-api`     | 8000     | `pnpm dev`         |
+| Web     | `apps/my-web`     | 3000     | `pnpm dev`         |
+| Mobile  | `apps/my-app`     | -        | `pnpm dev:mobile`  |
+| Desktop | `apps/my-desktop` | -        | `pnpm dev:desktop` |
+| Swagger | -                 | 8000/api | Auto with API      |
 
 ## Commands
 
@@ -27,9 +27,9 @@ pnpm format                 # Prettier format all files
 
 # Database
 pnpm setup:local            # Start PostgreSQL + push Prisma schema
-pnpm api prisma studio      # Open Prisma Studio
-pnpm api prisma generate    # Generate Prisma client
-pnpm api prisma db push     # Push schema changes
+pnpm my-api prisma studio   # Open Prisma Studio
+pnpm my-api prisma generate # Generate Prisma client
+pnpm my-api prisma db push  # Push schema changes
 
 # App Generator
 pnpm create-app <name> --from <template>  # Create new app from template
@@ -37,30 +37,30 @@ pnpm create-app --list                    # List available templates
 pnpm create-app                           # Interactive mode
 
 # Package-specific (use pnpm <package> <command>)
-pnpm api test:unit          # API unit tests
-pnpm api test:integration   # API integration tests
-pnpm api test:e2e           # API e2e tests
-pnpm web build              # Build web only
+pnpm my-api test:unit       # API unit tests
+pnpm my-api test:integration # API integration tests
+pnpm my-api test:e2e        # API e2e tests
+pnpm my-web build           # Build web only
 ```
 
 ## Project Structure
 
 ```
 apps/
-  api/                      # NestJS 11 backend
+  my-api/                   # NestJS 11 backend
     src/
       modules/              # Feature modules (use-case pattern)
       infra/                # Infrastructure (database, etc.)
     prisma/schema/          # Prisma schema files
     test/                   # unit/, integration/, e2e/
-  web/                      # Next.js 16 frontend (App Router)
+  my-web/                   # Next.js 16 frontend (App Router)
     src/
       app/[locale]/         # i18n routes with next-intl
       components/           # React components
       i18n/                 # Internationalization config
       messages/             # en.json, ko.json
-  mobile/                   # Expo 54 mobile app
-  desktop/                  # Electron desktop app (electron-forge)
+  my-app/                   # Expo 54 mobile app
+  my-desktop/               # Electron desktop app (electron-forge)
 
 packages/
   ui/                       # Shared React components (CVA + Tailwind)
@@ -189,7 +189,7 @@ throw new CustomException({
 
 ### Building
 
-- Development: `pnpm mobile start`
+- Development: `pnpm my-app start`
 - Production: Use EAS Build (not local builds)
 
 ## Desktop Patterns (Electron)
@@ -203,9 +203,9 @@ throw new CustomException({
 
 ### Building
 
-- Development: `pnpm dev:desktop` or `pnpm desktop dev`
-- Package: `pnpm desktop package`
-- Make distributable: `pnpm desktop make`
+- Development: `pnpm dev:desktop` or `pnpm my-desktop dev`
+- Package: `pnpm my-desktop package`
+- Make distributable: `pnpm my-desktop make`
 
 ### Notes
 
@@ -217,9 +217,9 @@ throw new CustomException({
 ### API Tests
 
 ```bash
-pnpm api test:unit          # Fast, isolated unit tests
-pnpm api test:integration   # With database
-pnpm api test:e2e           # Full HTTP tests
+pnpm my-api test:unit       # Fast, isolated unit tests
+pnpm my-api test:integration # With database
+pnpm my-api test:e2e        # Full HTTP tests
 ```
 
 ### Test Setup
@@ -231,20 +231,24 @@ pnpm api test:e2e           # Full HTTP tests
 
 ## Environment Variables
 
-### Required for API
+환경 변수는 루트 디렉토리의 `.env` 파일에서 중앙 관리합니다.
+
+### .env (Root Directory)
 
 ```bash
-DATABASE_URL=postgresql://postgres:postgres@localhost:6432/mydb?schema=public
+DATABASE_URL=postgresql://postgres:postgres@localhost:7432/turborepo-template-postgres?schema=public
 API_PORT=8000
 APP_ENV=local|staging|production
 SWAGGER_USERNAME=xxx      # Required for non-local Swagger
 SWAGGER_PASSWORD=xxx
 ```
 
+> 각 앱에서 `dotenv -e ../../.env` 명령어로 루트 `.env`를 참조합니다.
+
 ### Database
 
-- PostgreSQL via Docker on port 6432
-- Container name: `my-monorepo-postgres`
+- PostgreSQL via Docker on port 7432
+- Container name: `turborepo-template-postgres`
 - Start: `docker-compose up -d`
 
 ## Git Workflow
@@ -275,7 +279,7 @@ SWAGGER_PASSWORD=xxx
 
 ### Add i18n translations
 
-1. Add keys to `apps/web/src/messages/en.json` and `ko.json`
+1. Add keys to `apps/my-web/src/messages/en.json` and `ko.json`
 2. Use `useTranslations()` hook from `next-intl`
 
 ### Add a new app using CLI generator
@@ -312,13 +316,13 @@ SWAGGER_PASSWORD=xxx
 
 ```bash
 docker-compose down && docker-compose up -d
-pnpm api prisma db push
+pnpm my-api prisma db push
 ```
 
 ### Type errors after package changes
 
 ```bash
-pnpm api prisma generate    # Regenerate Prisma types
+pnpm my-api prisma generate # Regenerate Prisma types
 pnpm check-types            # Verify
 ```
 

@@ -12,8 +12,8 @@ cd my-project
 # 2. 의존성 설치
 pnpm install
 
-# 3. 환경 변수 설정 (apps/api/.env 생성)
-cp .env.example apps/api/.env
+# 3. 환경 변수 설정 (루트 .env 생성)
+cp .env.example .env
 
 # 4. 데이터베이스 시작 + 스키마 초기화
 pnpm setup:local
@@ -34,14 +34,14 @@ pnpm dev
 
 ### 필수 변경
 
-| 파일                              | 변경 항목                                |
-| --------------------------------- | ---------------------------------------- |
-| `package.json`                    | `name` 필드 (`my-monorepo` → 프로젝트명) |
-| `docker-compose.yml`              | `container_name`, `POSTGRES_DB`          |
-| `apps/api/.env`                   | `DATABASE_URL`의 DB명, 포트 등           |
-| `apps/api/prisma/schema/*.prisma` | 실제 도메인 모델로 교체                  |
-| `apps/web/src/messages/*.json`    | i18n 메시지                              |
-| `apps/mobile/app.json`            | `name`, `slug`, `bundleIdentifier` 등    |
+| 파일                                  | 변경 항목                                |
+| ------------------------------------- | ---------------------------------------- |
+| `package.json`                        | `name` 필드 (`my-monorepo` → 프로젝트명) |
+| `docker-compose.yml`                  | `container_name`, `POSTGRES_DB`          |
+| `.env`                                | `DATABASE_URL`의 DB명, 포트 등           |
+| `apps/my-api/prisma/schema/*.prisma`  | 실제 도메인 모델로 교체                  |
+| `apps/my-web/src/messages/*.json`     | i18n 메시지                              |
+| `apps/my-app/app.json`                | `name`, `slug`, `bundleIdentifier` 등    |
 
 ### 선택 변경
 
@@ -110,25 +110,25 @@ pnpm check-types        # 타입 체크
 pnpm test               # 테스트
 
 # 데이터베이스
-pnpm setup:local        # Docker + Prisma 초기화
-pnpm api prisma studio  # Prisma Studio
-pnpm api prisma generate # Prisma 클라이언트 생성
+pnpm setup:local            # Docker + Prisma 초기화
+pnpm my-api prisma studio   # Prisma Studio
+pnpm my-api prisma generate # Prisma 클라이언트 생성
 
 # 패키지별 실행
-pnpm api <명령어>       # API 패키지
-pnpm web <명령어>       # 웹 패키지
-pnpm mobile <명령어>    # 모바일 패키지
-pnpm desktop <명령어>   # 데스크톱 패키지
+pnpm my-api <명령어>        # API 패키지
+pnpm my-web <명령어>        # 웹 패키지
+pnpm my-app <명령어>        # 모바일 패키지
+pnpm my-desktop <명령어>    # 데스크톱 패키지
 ```
 
 ## 프로젝트 구조
 
 ```
 apps/
-  api/        # NestJS 11 백엔드 (Prisma, Swagger)
-  web/        # Next.js 16 프론트엔드 (Turbopack, next-intl)
-  mobile/     # Expo 54 모바일 (Expo Router)
-  desktop/    # Electron 39 데스크톱 (electron-forge)
+  my-api/     # NestJS 11 백엔드 (Prisma, Swagger)
+  my-web/     # Next.js 16 프론트엔드 (Turbopack, next-intl)
+  my-app/     # Expo 54 모바일 (Expo Router)
+  my-desktop/ # Electron 39 데스크톱 (electron-forge)
 
 packages/
   ui/                    # 공유 React 컴포넌트 (CVA, Tailwind)
@@ -154,9 +154,10 @@ scripts/
 
 ## 환경 변수
 
-`apps/api/.env` 파일 예시:
+루트 디렉토리의 `.env` 파일에서 모든 앱의 환경 변수를 관리합니다.
 
 ```bash
+# .env (루트 디렉토리)
 DATABASE_URL="postgresql://postgres:postgres@localhost:7432/turborepo-template-postgres?schema=public"
 API_PORT=8000
 APP_ENV=local
@@ -165,6 +166,8 @@ APP_ENV=local
 SWAGGER_USERNAME=admin
 SWAGGER_PASSWORD=password
 ```
+
+> **참고**: 각 앱에서 `dotenv -e ../../.env` 또는 상대 경로로 루트 `.env`를 참조합니다.
 
 ## 기술 스택
 
