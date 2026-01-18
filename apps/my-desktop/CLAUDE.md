@@ -1,6 +1,6 @@
-# CLAUDE.md - Desktop (Electron)
+# CLAUDE.md - my-desktop (Electron)
 
-> **IMPORTANT**: 이 파일은 Desktop 앱의 구조나 패턴이 변경될 때 반드시 함께 업데이트해야 합니다.
+> **IMPORTANT**: 이 파일은 my-desktop 앱의 구조나 패턴이 변경될 때 반드시 함께 업데이트해야 합니다.
 
 ## Quick Reference
 

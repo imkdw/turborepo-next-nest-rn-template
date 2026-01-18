@@ -3,6 +3,7 @@ import { WebView } from 'react-native-webview';
 import Constants from 'expo-constants';
 
 const WEB_APP_PORT = 3000;
+// TODO: Replace 'your-production-url.com' with your actual production domain
 const PRODUCTION_URL = 'https://your-production-url.com';
 const ANDROID_EMULATOR_LOCALHOST = '10.0.2.2';
 

@@ -1,6 +1,6 @@
 {
-  "name": "@repo/desktop",
-  "productName": "desktop",
+  "name": "@repo/my-desktop",
+  "productName": "my-desktop",
   "version": "0.0.1",
   "private": true,
   "description": "Electron desktop application",
@@ -15,8 +15,8 @@
   },
   "keywords": [],
   "author": {
-    "name": "dongwoo",
-    "email": "imkdw@kakao.com"
+    "name": "Your Name",
+    "email": "your-email@example.com"
   },
   "license": "MIT",
   "devDependencies": {

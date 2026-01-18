@@ -1,6 +1,6 @@
-# CLAUDE.md - Mobile (Expo)
+# CLAUDE.md - my-app (Expo)
 
-> **IMPORTANT**: 이 파일은 Mobile 앱의 구조나 패턴이 변경될 때 반드시 함께 업데이트해야 합니다.
+> **IMPORTANT**: 이 파일은 my-app 앱의 구조나 패턴이 변경될 때 반드시 함께 업데이트해야 합니다.
 
 ## Quick Reference
 

@@ -1,6 +1,6 @@
-# CLAUDE.md - Web (Next.js)
+# CLAUDE.md - my-web (Next.js)
 
-> **IMPORTANT**: 이 파일은 Web 앱의 구조나 패턴이 변경될 때 반드시 함께 업데이트해야 합니다.
+> **IMPORTANT**: 이 파일은 my-web 앱의 구조나 패턴이 변경될 때 반드시 함께 업데이트해야 합니다.
 
 ## Quick Reference
 

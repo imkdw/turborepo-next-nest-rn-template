@@ -46,7 +46,7 @@ export function createFetchApi(options: CreateFetchApiOptions) {
   };
 }
 
-const API_BASE_URL = process.env.API_BASE_URL ?? 'http://localhost:4000/v1';
+const API_BASE_URL = process.env.API_BASE_URL ?? 'http://localhost:8000/v1';
 
 export const fetchApi = createFetchApi({
   baseUrl: API_BASE_URL,

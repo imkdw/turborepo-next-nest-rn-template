@@ -9,7 +9,8 @@ import helmet from 'helmet';
 import { AppModule } from './app.module';
 
 function getCorsConfig(env: AppEnv) {
-  const corsOrigins = [/^https?:\/\/domain\.com$/, /^https?:\/\/.*\.domain\.com$/];
+  // TODO: Replace 'your-domain.com' with your actual production domain
+  const corsOrigins = [/^https?:\/\/your-domain\.com$/, /^https?:\/\/.*\.your-domain\.com$/];
 
   if (env !== APP_ENV.PRODUCTION) {
     corsOrigins.push(/^https?:\/\/localhost:([0-9]{1,5})$/);

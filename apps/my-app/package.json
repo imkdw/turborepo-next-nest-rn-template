@@ -1,5 +1,5 @@
 {
-  "name": "@repo/mobile",
+  "name": "@repo/my-app",
   "main": "expo-router/entry",
   "version": "0.0.1",
   "scripts": {

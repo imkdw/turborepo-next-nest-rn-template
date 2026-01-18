@@ -24,7 +24,11 @@
     "setup:test": "docker-compose up -d --wait && cd apps/api && pnpm dotenv -e ../../.env.test -- prisma db push --force-reset",
     "reset:test": "cd apps/api && pnpm dotenv -e ../../.env.test -- prisma db push --force-reset",
     "prepare": "husky",
-    "create-app": "tsx scripts/create-app.ts"
+    "create-app": "tsx scripts/create-app.ts",
+    "my-api": "pnpm -F my-api",
+    "my-web": "pnpm -F my-web",
+    "my-app": "pnpm -F my-app",
+    "my-desktop": "pnpm -F my-desktop"
   },
   "devDependencies": {
     "@types/prompts": "^2.4.9",

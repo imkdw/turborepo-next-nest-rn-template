@@ -51,6 +51,47 @@ pnpm dev
 | `packages/shared/consts/`    | 공유 상수      |
 | `.husky/pre-push`            | Git hook 설정  |
 
+## 앱 생성 (CLI)
+
+템플릿에서 새로운 앱을 빠르게 생성할 수 있습니다.
+
+```bash
+# 인터랙티브 모드
+pnpm create-app
+
+# CLI 모드
+pnpm create-app <앱-이름> --from <템플릿>
+
+# 예시
+pnpm create-app my-app --from mobile
+pnpm create-app admin-panel --from web
+pnpm create-app new-api --from api
+```
+
+**사용 가능한 템플릿**
+
+| 템플릿    | 설명                        |
+| --------- | --------------------------- |
+| `mobile`  | Expo React Native 모바일 앱 |
+| `desktop` | Electron 데스크톱 앱        |
+| `web`     | Next.js 웹 앱               |
+| `api`     | NestJS 백엔드 API           |
+
+**옵션**
+
+| 옵션             | 설명                          |
+| ---------------- | ----------------------------- |
+| `--from, -f`     | 사용할 템플릿 지정            |
+| `--dry-run`      | 실제 생성 없이 미리보기       |
+| `--skip-install` | 생성 후 pnpm install 건너뛰기 |
+| `--list`         | 사용 가능한 템플릿 목록 표시  |
+| `--help`         | 도움말 표시                   |
+
+생성된 앱은 `apps/<앱-이름>` 경로에 위치하며, 자동으로:
+- 패키지 이름이 `@repo/<앱-이름>`으로 설정됨
+- 루트 `package.json`에 `pnpm <앱-이름>` 스크립트 추가
+- 린트 및 빌드 검증 실행 (desktop, mobile 제외)
+
 ## 주요 명령어
 
 ```bash
@@ -58,6 +99,9 @@ pnpm dev
 pnpm dev                # 웹 + API 개발 서버
 pnpm dev:mobile         # 모바일 앱 (별도 실행)
 pnpm dev:desktop        # 데스크톱 앱 (별도 실행)
+
+# 앱 생성
+pnpm create-app         # 새로운 앱 생성 (인터랙티브)
 
 # 빌드 & 검증
 pnpm build              # 전체 빌드
@@ -97,6 +141,15 @@ packages/
     consts/              # 공유 상수
     exception/           # 에러 코드
     utils/               # 유틸리티
+
+templates/               # 앱 생성 CLI용 템플릿
+  mobile/                # 모바일 앱 템플릿
+  desktop/               # 데스크톱 앱 템플릿
+  web/                   # 웹 앱 템플릿
+  api/                   # API 템플릿
+
+scripts/
+  create-app.ts          # 앱 생성 CLI 스크립트
 ```
 
 ## 환경 변수
