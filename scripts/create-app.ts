@@ -705,6 +705,11 @@ function printNextSteps(appName: string, template: string): void {
       console.log(`    - Update ${pc.bold('app.json')}: display name, expo.ios.bundleIdentifier, expo.android.package`);
       console.log(`    - Configure EAS project: ${pc.dim('eas init')}`);
       console.log(`    - Set up app icons and splash screen in ${pc.bold('assets/')} directory`);
+      console.log(`\n  ${pc.cyan(pc.bold('⚠ Turborepo TUI compatibility:'))}`);
+      console.log(`    Mobile apps don't work well with Turborepo TUI.`);
+      console.log(`    Add a filter to exclude this app from the root ${pc.bold('dev')} script in ${pc.bold('package.json')}:`);
+      console.log(`    ${pc.green(`"dev": "turbo dev --filter=!@repo/${appName}"`)}`);
+      console.log(`    Run separately with: ${pc.green(`pnpm ${appName} dev`)}`);
       break;
     case 'desktop':
       console.log(`\n  ${pc.cyan('Desktop app setup:')}`);
@@ -712,6 +717,11 @@ function printNextSteps(appName: string, template: string): void {
       console.log(`    - Configure ${pc.bold('forge.config.ts')} for your platform targets`);
       console.log(`    - Update ${pc.bold('package.json')} author and description fields`);
       console.log(`    ${pc.dim('Note: Ports have been auto-allocated to avoid conflicts')}`);
+      console.log(`\n  ${pc.cyan(pc.bold('⚠ Turborepo TUI compatibility:'))}`);
+      console.log(`    Electron apps don't work well with Turborepo TUI.`);
+      console.log(`    Add a filter to exclude this app from the root ${pc.bold('dev')} script in ${pc.bold('package.json')}:`);
+      console.log(`    ${pc.green(`"dev": "turbo dev --filter=!@repo/${appName}"`)}`);
+      console.log(`    Run separately with: ${pc.green(`pnpm ${appName} dev`)}`);
       break;
     case 'web':
       console.log(`\n  ${pc.cyan('Web app setup:')}`);

@@ -1,7 +1,0 @@
-model User {
-  id    String @id
-  email String
-  name  String
-
-  @@map("user")
-}

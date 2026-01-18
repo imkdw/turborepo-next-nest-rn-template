@@ -1,0 +1,49 @@
+{
+  "name": "create-turborepo-full-stack-template",
+  "version": "1.0.0",
+  "description": "Create a full-stack Turborepo project with Next.js, NestJS, Expo, and Electron",
+  "keywords": [
+    "create",
+    "template",
+    "turborepo",
+    "monorepo",
+    "nextjs",
+    "nestjs",
+    "expo",
+    "electron",
+    "react-native",
+    "full-stack"
+  ],
+  "author": "imkdw",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/imkdw/turborepo-next-nest-rn-template"
+  },
+  "bin": {
+    "create-turborepo-full-stack-template": "./dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "scripts": {
+    "build": "tsup src/index.ts --format esm --dts --clean",
+    "dev": "tsup src/index.ts --format esm --watch",
+    "lint": "eslint src --fix",
+    "check-types": "tsc --noEmit"
+  },
+  "dependencies": {
+    "picocolors": "^1.1.1",
+    "prompts": "^2.4.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.0",
+    "@types/prompts": "^2.4.9",
+    "tsup": "^8.4.0",
+    "typescript": "5.9.2"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
