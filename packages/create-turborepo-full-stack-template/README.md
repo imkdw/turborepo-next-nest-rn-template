@@ -106,6 +106,20 @@ pnpm format                 # Prettier format all files
 
 <br>
 
+### App Generator
+
+Add new apps to your project using the built-in CLI generator:
+
+```bash
+pnpm create-app                           # Interactive mode
+pnpm create-app <name> --from <template>  # Create new app from template
+pnpm create-app --list                    # List available templates
+```
+
+Available templates: `mobile`, `desktop`, `web`, `api`
+
+<br>
+
 ### App-Specific Commands
 
 ```bash

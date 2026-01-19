@@ -395,9 +395,6 @@ function cleanupTemplate(projectPath: string): void {
 
   // Remove template-specific files and directories
   const filesToRemove = [
-    // Template directories
-    'templates',
-    'scripts/create-app.ts',
     '.sisyphus',
     '.claude',
     // GitHub workflow for NPM publishing (specific to CLI package)
@@ -425,18 +422,6 @@ function cleanupTemplate(projectPath: string): void {
   const tsbuildInfoFiles = getAllFiles(projectPath).filter((f) => f.endsWith('.tsbuildinfo'));
   for (const file of tsbuildInfoFiles) {
     fs.rmSync(file, { force: true });
-  }
-
-  // Update pnpm-workspace.yaml to remove templates entry
-  const workspacePath = path.join(projectPath, 'pnpm-workspace.yaml');
-  if (fs.existsSync(workspacePath)) {
-    let content = fs.readFileSync(workspacePath, 'utf-8');
-    // Handle various YAML formatting styles:
-    // - "templates/*", - 'templates/*', - templates/*, - templates/**
-    content = content.replace(/^\s*-\s*["']?templates\/\*{1,2}["']?\s*$/gm, '');
-    // Remove empty lines left over
-    content = content.replace(/\n{3,}/g, '\n\n');
-    fs.writeFileSync(workspacePath, content.trim() + '\n');
   }
 
   // Create .env from .env.example if it exists
