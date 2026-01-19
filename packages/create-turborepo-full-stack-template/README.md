@@ -12,6 +12,8 @@ npx create-turborepo-full-stack-template my-project
 pnpx create-turborepo-full-stack-template my-project
 ```
 
+<br>
+
 ## What's Included
 
 This template creates a complete monorepo with:
@@ -22,8 +24,6 @@ This template creates a complete monorepo with:
 | `apps/<project-name>-web`     | Next.js 16 web frontend | 3000 |
 | `apps/<project-name>-app`     | Expo 54 mobile app      | -    |
 | `apps/<project-name>-desktop` | Electron desktop app    | -    |
-
-<br>
 
 ### Shared Packages
 
@@ -37,15 +37,16 @@ This template creates a complete monorepo with:
 - `@repo/consts` - Shared constants
 - `@repo/exception` - Exception codes
 
-## Usage
-
 <br>
 
+## Usage
 ### Interactive Mode
 
 ```bash
 npx create-turborepo-full-stack-template
 ```
+
+<br>
 
 ### With Project Name
 
@@ -53,11 +54,15 @@ npx create-turborepo-full-stack-template
 npx create-turborepo-full-stack-template my-awesome-project
 ```
 
+<br>
+
 ### Skip Dependency Installation
 
 ```bash
 npx create-turborepo-full-stack-template my-project --skip-install
 ```
+
+<br>
 
 ## Options
 
@@ -66,6 +71,8 @@ npx create-turborepo-full-stack-template my-project --skip-install
 | `--skip-install` | Skip `pnpm install` after creation |
 | `--help, -h`     | Show help message                  |
 | `--version, -v`  | Show version                       |
+
+<br>
 
 ## After Creation
 
@@ -79,7 +86,6 @@ pnpm setup:local
 pnpm dev
 ```
 
-<br>
 
 ### Available Commands
 
@@ -124,11 +130,15 @@ pnpm my-project-api test:integration # With database
 pnpm my-project-api test:e2e         # Full HTTP tests
 ```
 
+<br>
+
 ## Requirements
 
 - Node.js >= 18 (Node.js >= 22 recommended for the generated project)
 - pnpm (v10+ recommended)
 - Docker (for PostgreSQL)
+
+<br>
 
 ## Tech Stack
 
@@ -141,6 +151,8 @@ pnpm my-project-api test:e2e         # Full HTTP tests
 - **Styling**: Tailwind CSS 4
 - **Language**: TypeScript 5.9
 - **Testing**: Jest, ts-jest
+
+<br>
 
 ## Project Structure
 
@@ -169,6 +181,8 @@ packages/
     exception/              # Exception codes
     utils/                  # Shared utilities
 ```
+
+<br>
 
 ## License
 
