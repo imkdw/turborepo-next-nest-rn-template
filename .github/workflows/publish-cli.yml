@@ -63,7 +63,7 @@ jobs:
 
       - name: Update package version
         working-directory: packages/create-turborepo-full-stack-template
-        run: npm version ${{ steps.version.outputs.VERSION }} --no-git-tag-version
+        run: npm version ${{ steps.version.outputs.VERSION }} --no-git-tag-version --allow-same-version
 
       - name: Type check
         run: pnpm --filter create-turborepo-full-stack-template check-types
