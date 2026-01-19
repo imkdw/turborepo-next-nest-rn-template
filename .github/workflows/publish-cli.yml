@@ -1,6 +1,11 @@
 name: Publish CLI to npm
 
 on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'packages/create-turborepo-full-stack-template/**'
   release:
     types: [published]
   workflow_dispatch:
@@ -17,13 +22,16 @@ on:
 
 jobs:
   publish:
-    # Run if: manual trigger OR release with cli@ tag
-    if: github.event_name == 'workflow_dispatch' || startsWith(github.event.release.tag_name, 'cli@')
+    # Run if: push to main OR manual trigger OR release with cli@ tag
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch' || startsWith(github.event.release.tag_name, 'cli@')
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -36,12 +44,25 @@ jobs:
           cache: 'pnpm'
           cache-dependency-path: 'pnpm-lock.yaml'
 
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
       - name: Determine version
         id: version
+        working-directory: packages/create-turborepo-full-stack-template
         run: |
           if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
             echo "VERSION=${{ inputs.version }}" >> $GITHUB_OUTPUT
             echo "Using manual version: ${{ inputs.version }}"
+          elif [ "${{ github.event_name }}" == "push" ]; then
+            # Auto bump patch version on push to main
+            CURRENT_VERSION=$(node -p "require('./package.json').version")
+            # Increment patch version
+            NEW_VERSION=$(echo $CURRENT_VERSION | awk -F. '{printf "%d.%d.%d", $1, $2, $3+1}')
+            echo "VERSION=$NEW_VERSION" >> $GITHUB_OUTPUT
+            echo "Auto-bumping from $CURRENT_VERSION to $NEW_VERSION"
           else
             VERSION="${GITHUB_REF_NAME#cli@}"
             echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
@@ -79,6 +100,14 @@ jobs:
         run: |
           test -f dist/index.js || (echo "Build output missing" && exit 1)
           echo "Build output verified"
+
+      - name: Commit version bump
+        if: github.event_name == 'push'
+        working-directory: packages/create-turborepo-full-stack-template
+        run: |
+          git add package.json
+          git commit -m "chore: bump cli version to ${{ steps.version.outputs.VERSION }} [skip ci]"
+          git push
 
       - name: Publish to npm
         if: ${{ !inputs.dry_run }}
