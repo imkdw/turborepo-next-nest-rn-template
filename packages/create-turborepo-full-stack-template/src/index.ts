@@ -10,7 +10,7 @@ import pc from 'picocolors';
 // Constants
 // =============================================================================
 
-const REPO_URL = 'imkdw/turborepo-next-nest-rn-template';
+const REPO_URL = 'imkdw/turborepo-full-stack-template';
 const DEFAULT_PROJECT_NAME = 'my-turborepo';
 
 // Directories to exclude from processing
