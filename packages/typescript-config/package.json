@@ -2,9 +2,40 @@
   "name": "@repo/typescript-config",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
   "license": "MIT",
+  "exports": {
+    "./base.json": "./base.json",
+    "./nestjs.json": "./nestjs.json",
+    "./next.json": "./next.json",
+    "./react-library.json": "./react-library.json",
+    "./tsup/base": {
+      "types": "./dist/tsup/base.d.ts",
+      "import": "./dist/tsup/base.js"
+    },
+    "./tsup/cjs": {
+      "types": "./dist/tsup/cjs.d.ts",
+      "import": "./dist/tsup/cjs.js"
+    },
+    "./tsup/esm": {
+      "types": "./dist/tsup/esm.d.ts",
+      "import": "./dist/tsup/esm.js"
+    },
+    "./tsup/dual": {
+      "types": "./dist/tsup/dual.d.ts",
+      "import": "./dist/tsup/dual.js"
+    }
+  },
   "scripts": {
-    "build": "echo 'No build needed for typescript-config'"
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "check-types": "tsc --noEmit"
+  },
+  "dependencies": {
+    "tsup": "^8.3.5"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.2"
   },
   "publishConfig": {
     "access": "public"

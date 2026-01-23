@@ -2,11 +2,19 @@
   "name": "@repo/consts",
   "version": "0.0.1",
   "private": true,
-  "main": "./dist/index.js",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
   "scripts": {
-    "build": "tsc",
-    "dev": "tsc --watch",
+    "build": "tsup",
+    "dev": "tsup --watch",
     "clean": "rm -rf dist",
     "check-types": "tsc --noEmit",
     "lint": "eslint src/ --fix"
@@ -15,6 +23,7 @@
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "eslint": "^9.18.0",
+    "tsup": "^8.3.5",
     "typescript": "^5.9.2"
   }
 }

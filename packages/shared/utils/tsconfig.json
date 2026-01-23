@@ -4,8 +4,9 @@
     "outDir": "./dist",
     "rootDir": "./src",
     "declaration": true,
-    "module": "CommonJS",
-    "moduleResolution": "node"
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "incremental": false
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]

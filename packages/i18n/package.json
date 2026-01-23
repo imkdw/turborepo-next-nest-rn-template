@@ -2,14 +2,23 @@
   "name": "@repo/i18n",
   "version": "0.0.1",
   "private": true,
-  "main": "./src/index.ts",
-  "types": "./src/index.ts",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
-    ".": "./src/index.ts",
-    "./config": "./src/config.ts"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./config": {
+      "types": "./dist/config.d.ts",
+      "import": "./dist/config.js"
+    }
   },
   "scripts": {
-    "dev": "echo 'i18n package is ready for development'",
+    "build": "tsup",
+    "dev": "tsup --watch",
     "lint": "eslint src/ --fix",
     "check-types": "tsc --noEmit"
   },
@@ -17,6 +26,7 @@
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "eslint": "^9.18.0",
+    "tsup": "^8.3.5",
     "typescript": "5.9.2"
   }
 }
