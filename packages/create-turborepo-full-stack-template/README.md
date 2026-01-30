@@ -5,11 +5,9 @@ Create a full-stack Turborepo project with Next.js, NestJS, Expo, and Electron i
 ## Quick Start
 
 ```bash
-# Using npx (recommended)
+# Create an empty directory and run from it
+mkdir my-project && cd my-project
 npx create-turborepo-full-stack-template my-project
-
-# Using pnpx
-pnpx create-turborepo-full-stack-template my-project
 ```
 
 <br>
@@ -18,12 +16,12 @@ pnpx create-turborepo-full-stack-template my-project
 
 This template creates a complete monorepo with:
 
-| App                           | Description             | Port |
-| ----------------------------- | ----------------------- | ---- |
-| `apps/<project-name>-api`     | NestJS 11 backend API   | 8000 |
-| `apps/<project-name>-web`     | Next.js 16 web frontend | 3000 |
-| `apps/<project-name>-app`     | Expo 54 mobile app      | -    |
-| `apps/<project-name>-desktop` | Electron desktop app    | -    |
+| Template  | Description             | Port |
+| --------- | ----------------------- | ---- |
+| `api`     | NestJS 11 backend API   | 8000 |
+| `web`     | Next.js 16 web frontend | 3000 |
+| `mobile`  | Expo 54 mobile app      | -    |
+| `desktop` | Electron desktop app    | -    |
 
 ### Shared Packages
 
@@ -52,6 +50,7 @@ npx create-turborepo-full-stack-template
 ### With Project Name
 
 ```bash
+mkdir my-project && cd my-project
 npx create-turborepo-full-stack-template my-awesome-project
 ```
 
@@ -60,6 +59,7 @@ npx create-turborepo-full-stack-template my-awesome-project
 ### Skip Dependency Installation
 
 ```bash
+mkdir my-project && cd my-project
 npx create-turborepo-full-stack-template my-project --skip-install
 ```
 
@@ -78,12 +78,13 @@ npx create-turborepo-full-stack-template my-project --skip-install
 ## After Creation
 
 ```bash
-cd my-project
+# Create your first app
+pnpm create-app
 
-# Start PostgreSQL and push Prisma schema
+# Start PostgreSQL
 pnpm setup:local
 
-# Start development (API + Web)
+# Start development (after creating apps)
 pnpm dev
 ```
 
@@ -91,7 +92,7 @@ pnpm dev
 
 ## Customize Package Scope
 
-기본 패키지 스코프는 `@repo/` 입니다. 원하는 스코프로 변경할 수 있습니다:
+The default package scope is `@repo/`. You can change it to your preferred scope:
 
 ### Using CLI Script
 
@@ -108,13 +109,13 @@ pnpm install
 
 ### Using Claude Code
 
-Claude Code를 사용하는 경우, 커맨드로 간편하게 변경할 수 있습니다:
+If you use Claude Code, you can easily change it with a command:
 
 ```
 /rename-scope mycompany
 ```
 
-Claude Code가 자동으로 드라이런, 변경, 의존성 재설치, 빌드 검증까지 수행합니다.
+Claude Code will automatically perform a dry-run, apply changes, reinstall dependencies, and verify the build.
 
 ### Available Commands
 
@@ -145,18 +146,14 @@ Available templates: `mobile`, `desktop`, `web`, `api`
 
 ### App-Specific Commands
 
-```bash
-# Use pnpm <project-name>-<app> <command>
-pnpm my-project-api dev              # Start API only
-pnpm my-project-web dev              # Start Web only
-pnpm my-project-api prisma studio    # Open Prisma Studio
-pnpm my-project-api prisma generate  # Generate Prisma client
-pnpm my-project-api prisma db push   # Push schema changes
+After creating apps with `pnpm create-app`, use:
 
-# API Testing
-pnpm my-project-api test:unit        # Fast, isolated unit tests
-pnpm my-project-api test:integration # With database
-pnpm my-project-api test:e2e         # Full HTTP tests
+```bash
+pnpm <app-name> dev              # Start app in dev mode
+pnpm <app-name> build            # Build app
+# For API apps:
+pnpm <app-name> prisma studio    # Open Prisma Studio
+pnpm <app-name> test:unit        # Unit tests
 ```
 
 <br>
@@ -186,17 +183,11 @@ pnpm my-project-api test:e2e         # Full HTTP tests
 ## Project Structure
 
 ```
-apps/
-  <project-name>-api/       # NestJS backend
-    src/modules/            # Feature modules (use-case pattern)
-    src/infra/              # Infrastructure (database, etc.)
-    prisma/schema/          # Prisma schema files
-    test/                   # unit/, integration/, e2e/
-  <project-name>-web/       # Next.js frontend (App Router)
-    src/app/[locale]/       # i18n routes with next-intl
-    src/messages/           # en.json, ko.json
-  <project-name>-app/       # Expo mobile app
-  <project-name>-desktop/   # Electron desktop app
+templates/                  # App templates for CLI generator
+  api/                      # NestJS backend template
+  web/                      # Next.js frontend template
+  mobile/                   # Expo mobile template
+  desktop/                  # Electron desktop template
 
 packages/
   ui/                       # Shared React components

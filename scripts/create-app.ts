@@ -43,7 +43,6 @@ interface ParsedArgs {
 
 interface RollbackState {
   appFolderCreated: boolean;
-  rootPackageJsonBackup: string | null;
 }
 
 interface ExecutionContext {
@@ -146,7 +145,6 @@ const TEMPLATES: Record<string, TemplateConfig> = {
 let currentSpinner: Ora | null = null;
 let rollbackState: RollbackState = {
   appFolderCreated: false,
-  rootPackageJsonBackup: null,
 };
 let currentAppPath: string | null = null;
 
@@ -340,33 +338,6 @@ function replaceInTextFile(filePath: string, replacements: TextReplacement[], ap
 }
 
 /**
- * Adds a shortcut script to root package.json.
- * @returns Original content for rollback
- */
-function updateRootPackageJson(appName: string): string {
-  const packageJsonPath = path.join(ROOT_DIR, 'package.json');
-  const content = fs.readFileSync(packageJsonPath, 'utf-8');
-  const backup = content;
-
-  const json = JSON.parse(content);
-
-  if (!json.scripts) {
-    json.scripts = {};
-  }
-
-  json.scripts[appName] = `pnpm -F ${appName}`;
-
-  fs.writeFileSync(packageJsonPath, JSON.stringify(json, null, 2) + '\n');
-
-  return backup;
-}
-
-function restoreRootPackageJson(backup: string): void {
-  const packageJsonPath = path.join(ROOT_DIR, 'package.json');
-  fs.writeFileSync(packageJsonPath, backup);
-}
-
-/**
  * Scans existing Electron apps to find the highest used port,
  * then returns the next available port pair for webpack dev server.
  */
@@ -418,10 +389,6 @@ async function rollback(state: RollbackState, appPath: string | null): Promise<v
   const rollbackSpinner = ora('Rolling back changes...').start();
 
   try {
-    if (state.rootPackageJsonBackup) {
-      restoreRootPackageJson(state.rootPackageJsonBackup);
-    }
-
     if (state.appFolderCreated && appPath && fs.existsSync(appPath)) {
       fs.rmSync(appPath, { recursive: true, force: true });
     }
@@ -433,7 +400,6 @@ async function rollback(state: RollbackState, appPath: string | null): Promise<v
     if (appPath) {
       console.error(pc.red(`  - Delete folder: ${appPath}`));
     }
-    console.error(pc.red('  - Restore root package.json manually'));
     throw error;
   }
 }
@@ -624,9 +590,6 @@ function printDryRun(context: ExecutionContext): void {
     console.log(`  port: ${pc.green(ports.port.toString())}`);
     console.log(`  loggerPort: ${pc.green(ports.loggerPort.toString())}`);
   }
-
-  console.log(`\n${pc.bold('Root package.json update:')}`);
-  console.log(`  scripts.${appName} → ${pc.green(`pnpm -F ${appName}`)}\n`);
 
   console.log(`${pc.bold('Verification steps (after creation):')}`);
   console.log(`  1. pnpm install`);
@@ -846,13 +809,6 @@ async function main(): Promise<void> {
       portSpinner.succeed(`Allocated ports: ${ports.port}, ${ports.loggerPort}`);
     }
 
-    const rootSpinner = ora('Updating root package.json...').start();
-    currentSpinner = rootSpinner;
-
-    rollbackState.rootPackageJsonBackup = updateRootPackageJson(appName);
-
-    rootSpinner.succeed('Updated root package.json');
-
     if (!skipInstall) {
       const installSpinner = ora('Running pnpm install...').start();
       currentSpinner = installSpinner;
@@ -873,8 +829,12 @@ async function main(): Promise<void> {
         installSpinner.warn('pnpm install completed with warnings');
       }
 
-      const myApiPath = path.join(APPS_DIR, 'my-api');
-      const prismaAppName = fs.existsSync(myApiPath) ? 'my-api' : template === 'api' ? appName : null;
+      // Find existing API app with Prisma (instead of hardcoded 'my-api')
+      const existingApiApp = fs
+        .readdirSync(APPS_DIR, { withFileTypes: true })
+        .filter(e => e.isDirectory())
+        .find(e => fs.existsSync(path.join(APPS_DIR, e.name, 'prisma')));
+      const prismaAppName = existingApiApp?.name ?? (template === 'api' ? appName : null);
 
       if (prismaAppName) {
         const prismaSpinner = ora('Generating Prisma client...').start();
@@ -915,7 +875,7 @@ async function main(): Promise<void> {
 
     console.error(pc.red('\nError:'), error instanceof Error ? error.message : error);
 
-    if (rollbackState.appFolderCreated || rollbackState.rootPackageJsonBackup) {
+    if (rollbackState.appFolderCreated) {
       await rollback(rollbackState, appPath);
     }
 
@@ -928,7 +888,7 @@ process.on('SIGINT', async () => {
 
   currentSpinner?.stop();
 
-  if (rollbackState.appFolderCreated || rollbackState.rootPackageJsonBackup) {
+  if (rollbackState.appFolderCreated) {
     await rollback(rollbackState, currentAppPath);
   }
 

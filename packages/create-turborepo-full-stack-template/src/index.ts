@@ -2,6 +2,7 @@
 
 import { execSync, spawn } from 'child_process';
 import * as fs from 'fs';
+import * as os from 'os';
 import * as path from 'path';
 import prompts from 'prompts';
 import pc from 'picocolors';
@@ -74,24 +75,25 @@ function printBanner(): void {
 function printHelp(): void {
   console.log(`
 ${pc.bold('Usage:')}
-  npx create-turborepo-full-stack-template [project-name] [options]
-  pnpx create-turborepo-full-stack-template [project-name] [options]
+  ${pc.cyan('mkdir')} my-project && ${pc.cyan('cd')} my-project
+  ${pc.cyan('npx')} create-turborepo-full-stack-template my-project
+
+  ${pc.dim('Must be run from an empty directory.')}
+  ${pc.dim('The project name is used for package naming, not directory creation.')}
 
 ${pc.bold('Options:')}
   --skip-install    Skip dependency installation
   --help, -h        Show this help message
   --version, -v     Show version
 
-${pc.bold('Examples:')}
-  npx create-turborepo-full-stack-template my-app
-  npx create-turborepo-full-stack-template my-app --skip-install
-
 ${pc.bold("What's included:")}
-  ${pc.cyan('apps/<project-name>-api')}      NestJS 11 backend API
-  ${pc.cyan('apps/<project-name>-web')}      Next.js 16 web frontend
-  ${pc.cyan('apps/<project-name>-app')}      Expo 54 mobile app
-  ${pc.cyan('apps/<project-name>-desktop')}  Electron desktop app
-  ${pc.cyan('packages/*')}                   Shared packages (ui, config, types, etc.)
+  ${pc.cyan('templates/')}     App templates (api, web, mobile, desktop)
+  ${pc.cyan('packages/*')}     Shared packages (ui, config, types, etc.)
+  ${pc.cyan('scripts/')}       CLI tools (create-app, rename-scope)
+
+${pc.bold('After creation, generate apps:')}
+  pnpm create-app              Interactive mode
+  pnpm create-app my-api --from api
 `);
 }
 
@@ -315,8 +317,12 @@ function updateProjectName(projectPath: string, projectName: string): void {
     ['"productName": "my-desktop"', `"productName": "${pascalName}Desktop"`],
 
     // ==========================================================================
-    // pnpm filter commands
+    // pnpm filter commands (--filter / -F shorthand)
     // ==========================================================================
+    ['pnpm -F my-api', `pnpm -F ${kebabName}-api`],
+    ['pnpm -F my-web', `pnpm -F ${kebabName}-web`],
+    ['pnpm -F my-app', `pnpm -F ${kebabName}-app`],
+    ['pnpm -F my-desktop', `pnpm -F ${kebabName}-desktop`],
     ['pnpm my-api', `pnpm ${kebabName}-api`],
     ['pnpm my-web', `pnpm ${kebabName}-web`],
     ['pnpm my-app', `pnpm ${kebabName}-app`],
@@ -354,25 +360,6 @@ function updateProjectName(projectPath: string, projectName: string): void {
   for (const file of files) {
     if (replaceInFile(file, replacements)) {
       updatedCount++;
-    }
-  }
-
-  // Rename directories
-  const appsDir = path.join(projectPath, 'apps');
-  if (fs.existsSync(appsDir)) {
-    const appDirs = [
-      { from: 'my-api', to: `${kebabName}-api` },
-      { from: 'my-web', to: `${kebabName}-web` },
-      { from: 'my-app', to: `${kebabName}-app` },
-      { from: 'my-desktop', to: `${kebabName}-desktop` },
-    ];
-
-    for (const { from, to } of appDirs) {
-      const fromPath = path.join(appsDir, from);
-      const toPath = path.join(appsDir, to);
-      if (fs.existsSync(fromPath)) {
-        fs.renameSync(fromPath, toPath);
-      }
     }
   }
 
@@ -457,42 +444,31 @@ async function installDependencies(projectPath: string): Promise<boolean> {
   });
 }
 
-function printNextSteps(projectName: string, skipInstall: boolean): void {
-  const kebabName = toKebabCase(projectName);
-
+function printNextSteps(_projectName: string, skipInstall: boolean): void {
   console.log('');
   console.log(pc.green('✓') + pc.bold(' Project created successfully!'));
   console.log('');
   console.log(pc.bold('Next steps:'));
   console.log('');
-  console.log(`  ${pc.cyan('cd')} ${projectName}`);
 
   if (skipInstall) {
     console.log(`  ${pc.cyan('pnpm')} install`);
   }
 
-  console.log(`  ${pc.cyan('pnpm')} setup:local       ${pc.dim('# Start PostgreSQL and push schema')}`);
-  console.log(`  ${pc.cyan('pnpm')} dev               ${pc.dim('# Start API + Web')}`);
+  console.log(`  ${pc.cyan('pnpm')} create-app         ${pc.dim('# Create your first app (interactive)')}`);
+  console.log(`  ${pc.cyan('pnpm')} setup:local        ${pc.dim('# Start PostgreSQL')}`);
+  console.log(`  ${pc.cyan('pnpm')} dev                ${pc.dim('# Start dev mode (after creating apps)')}`);
   console.log('');
-  console.log(pc.bold('Available commands:'));
+  console.log(pc.bold('Create apps:'));
   console.log('');
-  console.log(`  ${pc.cyan('pnpm')} dev               ${pc.dim('# Start API + Web in dev mode')}`);
-  console.log(`  ${pc.cyan('pnpm')} build             ${pc.dim('# Build all packages')}`);
-  console.log(`  ${pc.cyan('pnpm')} lint              ${pc.dim('# Lint all packages')}`);
-  console.log(`  ${pc.cyan('pnpm')} test              ${pc.dim('# Run all tests')}`);
+  console.log(`  ${pc.cyan('pnpm')} create-app my-api --from api        ${pc.dim('# NestJS backend')}`);
+  console.log(`  ${pc.cyan('pnpm')} create-app my-web --from web        ${pc.dim('# Next.js frontend')}`);
+  console.log(`  ${pc.cyan('pnpm')} create-app my-app --from mobile     ${pc.dim('# Expo mobile app')}`);
+  console.log(`  ${pc.cyan('pnpm')} create-app my-desktop --from desktop ${pc.dim('# Electron desktop app')}`);
   console.log('');
   console.log(pc.bold('Customize package scope:'));
   console.log('');
-  console.log(`  ${pc.dim('Default scope is')} ${pc.cyan('@repo/')}`);
   console.log(`  ${pc.cyan('pnpm')} rename-scope mycompany   ${pc.dim('# Change @repo/ to @mycompany/')}`);
-  console.log(`  ${pc.dim('Or use Claude Code:')} ${pc.cyan('/rename-scope mycompany')}`);
-  console.log('');
-  console.log(pc.bold('App-specific commands:'));
-  console.log('');
-  console.log(`  ${pc.cyan('pnpm')} ${kebabName}-api dev       ${pc.dim('# Start API only')}`);
-  console.log(`  ${pc.cyan('pnpm')} ${kebabName}-web dev       ${pc.dim('# Start Web only')}`);
-  console.log(`  ${pc.cyan('pnpm')} ${kebabName}-app start     ${pc.dim('# Start Mobile app')}`);
-  console.log(`  ${pc.cyan('pnpm')} ${kebabName}-desktop dev   ${pc.dim('# Start Desktop app')}`);
   console.log('');
   console.log(pc.dim('Happy coding!'));
   console.log('');
@@ -551,11 +527,13 @@ async function main(): Promise<void> {
     projectName = response.projectName as string;
   }
 
-  const projectPath = path.resolve(process.cwd(), projectName);
+  const projectPath = process.cwd();
 
-  // Check if directory already exists
-  if (fs.existsSync(projectPath)) {
-    console.error(pc.red(`Error: Directory "${projectName}" already exists`));
+  // Ensure current directory is completely empty
+  const existingEntries = fs.readdirSync(projectPath);
+  if (existingEntries.length > 0) {
+    console.error(pc.red('Error: Current directory is not empty.'));
+    console.error(pc.dim('Run this command from an empty directory.'));
     process.exit(1);
   }
 
@@ -563,11 +541,20 @@ async function main(): Promise<void> {
   console.log(pc.bold(`Creating ${pc.cyan(projectName)}...`));
   console.log('');
 
-  try {
-    // Download template
-    await downloadTemplate(projectPath);
+  const tempPath = path.join(os.tmpdir(), `create-template-${Date.now()}`);
 
-    // Update project name
+  try {
+    // Download template to temp directory
+    await downloadTemplate(tempPath);
+
+    // Move all contents from temp to cwd
+    const tempEntries = fs.readdirSync(tempPath);
+    for (const entry of tempEntries) {
+      fs.renameSync(path.join(tempPath, entry), path.join(projectPath, entry));
+    }
+    fs.rmSync(tempPath, { recursive: true, force: true });
+
+    // Update project name references
     updateProjectName(projectPath, projectName);
 
     // Cleanup template files
@@ -583,9 +570,16 @@ async function main(): Promise<void> {
   } catch (error) {
     console.error(pc.red('Error:'), error instanceof Error ? error.message : error);
 
-    // Cleanup on error
-    if (fs.existsSync(projectPath)) {
-      fs.rmSync(projectPath, { recursive: true, force: true });
+    // Clean up: remove all files we created in cwd
+    // Safe because we verified cwd was empty before starting
+    const cwdEntries = fs.readdirSync(projectPath);
+    for (const entry of cwdEntries) {
+      fs.rmSync(path.join(projectPath, entry), { recursive: true, force: true });
+    }
+
+    // Also clean up temp directory if it still exists
+    if (fs.existsSync(tempPath)) {
+      fs.rmSync(tempPath, { recursive: true, force: true });
     }
 
     process.exit(1);

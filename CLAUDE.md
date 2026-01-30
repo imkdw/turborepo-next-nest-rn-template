@@ -4,21 +4,22 @@ This is a Turborepo monorepo with Next.js web frontend, NestJS backend API, Expo
 
 ## Quick Reference
 
-| App     | Location          | Port     | Run                   |
-| ------- | ----------------- | -------- | --------------------- |
-| API     | `apps/my-api`     | 8000     | `pnpm dev`            |
-| Web     | `apps/my-web`     | 3000     | `pnpm dev`            |
-| Mobile  | `apps/my-app`     | -        | `pnpm my-app start`   |
-| Desktop | `apps/my-desktop` | -        | `pnpm my-desktop dev` |
-| Swagger | -                 | 8000/api | Auto with API         |
+> **Note:** Apps are not included by default. Create them with `pnpm create-app`.
+
+| App     | Create with                              | Port |
+| ------- | ---------------------------------------- | ---- |
+| API     | `pnpm create-app <name> --from api`      | 8000 |
+| Web     | `pnpm create-app <name> --from web`      | 3000 |
+| Mobile  | `pnpm create-app <name> --from mobile`   | -    |
+| Desktop | `pnpm create-app <name> --from desktop`  | -    |
 
 ## Commands
 
 ```bash
 # Development
 pnpm dev                    # Start API + Web (not mobile/desktop)
-pnpm my-app start           # Start mobile app separately
-pnpm my-desktop dev         # Start desktop app separately
+pnpm <app-name> start       # Start mobile app separately
+pnpm <app-name> dev         # Start desktop app separately
 pnpm build                  # Build all packages
 pnpm lint                   # Lint with auto-fix
 pnpm check-types            # TypeScript type check
@@ -26,10 +27,10 @@ pnpm test                   # Run all tests
 pnpm format                 # Prettier format all files
 
 # Database
-pnpm setup:local            # Start PostgreSQL + push Prisma schema
-pnpm my-api prisma studio   # Open Prisma Studio
-pnpm my-api prisma generate # Generate Prisma client
-pnpm my-api prisma db push  # Push schema changes
+pnpm setup:local            # Start PostgreSQL
+pnpm <api-app> prisma studio   # Open Prisma Studio
+pnpm <api-app> prisma generate # Generate Prisma client
+pnpm <api-app> prisma db push  # Push schema changes
 
 # App Generator
 pnpm create-app <name> --from <template>  # Create new app from template
@@ -37,31 +38,31 @@ pnpm create-app --list                    # List available templates
 pnpm create-app                           # Interactive mode
 pnpm rename-scope <scope>    # Change @repo/ package scope (e.g., pnpm rename-scope mycompany)
 
-# Package-specific (use pnpm <package> <command>)
-pnpm my-api test:unit       # API unit tests
-pnpm my-api test:integration # API integration tests
-pnpm my-api test:e2e        # API e2e tests
-pnpm my-web build           # Build web only
+# Package-specific (use pnpm <app-name> <command>)
+pnpm <api-app> test:unit       # API unit tests
+pnpm <api-app> test:integration # API integration tests
+pnpm <api-app> test:e2e        # API e2e tests
+pnpm <web-app> build           # Build web only
 ```
 
 ## Project Structure
 
 ```
-apps/
-  my-api/                   # NestJS 11 backend
+apps/                         # Empty by default — create apps with pnpm create-app
+  <api-app>/                  # NestJS 11 backend (created from api template)
     src/
       modules/              # Feature modules (use-case pattern)
       infra/                # Infrastructure (database, etc.)
     prisma/schema/          # Prisma schema files
     test/                   # unit/, integration/, e2e/
-  my-web/                   # Next.js 16 frontend (App Router)
+  <web-app>/                  # Next.js 16 frontend (created from web template)
     src/
       app/[locale]/         # i18n routes with next-intl
       components/           # React components
       i18n/                 # Internationalization config
       messages/             # en.json, ko.json
-  my-app/                   # Expo 54 mobile app
-  my-desktop/               # Electron desktop app (electron-forge)
+  <mobile-app>/               # Expo 54 mobile app (created from mobile template)
+  <desktop-app>/              # Electron desktop app (created from desktop template)
 
 packages/
   ui/                       # Shared React components (CVA + Tailwind)
@@ -190,7 +191,7 @@ throw new CustomException({
 
 ### Building
 
-- Development: `pnpm my-app start`
+- Development: `pnpm <app-name> start`
 - Production: Use EAS Build (not local builds)
 
 ## Desktop Patterns (Electron)
@@ -204,9 +205,9 @@ throw new CustomException({
 
 ### Building
 
-- Development: `pnpm my-desktop dev`
-- Package: `pnpm my-desktop package`
-- Make distributable: `pnpm my-desktop make`
+- Development: `pnpm <app-name> dev`
+- Package: `pnpm <app-name> package`
+- Make distributable: `pnpm <app-name> make`
 
 ### Notes
 
@@ -218,9 +219,9 @@ throw new CustomException({
 ### API Tests
 
 ```bash
-pnpm my-api test:unit       # Fast, isolated unit tests
-pnpm my-api test:integration # With database
-pnpm my-api test:e2e        # Full HTTP tests
+pnpm <api-app> test:unit       # Fast, isolated unit tests
+pnpm <api-app> test:integration # With database
+pnpm <api-app> test:e2e        # Full HTTP tests
 ```
 
 ### Test Setup
@@ -232,7 +233,7 @@ pnpm my-api test:e2e        # Full HTTP tests
 
 ## Environment Variables
 
-환경 변수는 루트 디렉토리의 `.env` 파일에서 중앙 관리합니다.
+Environment variables are centrally managed in the `.env` file at the root directory.
 
 ### .env (Root Directory)
 
@@ -244,7 +245,7 @@ SWAGGER_USERNAME=xxx      # Required for non-local Swagger
 SWAGGER_PASSWORD=xxx
 ```
 
-> 각 앱에서 `dotenv -e ../../.env` 명령어로 루트 `.env`를 참조합니다.
+> Each app references the root `.env` using the `dotenv -e ../../.env` command.
 
 ### Database
 
@@ -280,7 +281,7 @@ SWAGGER_PASSWORD=xxx
 
 ### Add i18n translations
 
-1. Add keys to `apps/my-web/src/messages/en.json` and `ko.json`
+1. Add keys to `apps/<web-app>/src/messages/en.json` and `ko.json`
 2. Use `useTranslations()` hook from `next-intl`
 
 ### Change package scope
@@ -305,7 +306,6 @@ SWAGGER_PASSWORD=xxx
    - Copy template from `templates/`
    - Update package.json name to `@repo/<app-name>`
    - Update template-specific config (app.json, forge.config.ts, etc.)
-   - Add script to root package.json
    - Run lint and build verification
 4. Options:
    - `--dry-run` - Preview changes without creating files
@@ -315,7 +315,7 @@ SWAGGER_PASSWORD=xxx
 ## Performance Notes
 
 - Turborepo caches builds - use `turbo run build --force` to bypass
-- Dev excludes mobile and desktop by default (use `pnpm my-app start` or `pnpm my-desktop dev` separately)
+- Dev excludes mobile and desktop by default (start them separately with `pnpm <app-name> start` or `pnpm <app-name> dev`)
 - Prisma client auto-generates on install
 
 ## Troubleshooting
@@ -324,13 +324,13 @@ SWAGGER_PASSWORD=xxx
 
 ```bash
 docker-compose down && docker-compose up -d
-pnpm my-api prisma db push
+pnpm <api-app> prisma db push
 ```
 
 ### Type errors after package changes
 
 ```bash
-pnpm my-api prisma generate # Regenerate Prisma types
+pnpm <api-app> prisma generate # Regenerate Prisma types
 pnpm check-types            # Verify
 ```
 
