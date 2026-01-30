@@ -61,21 +61,40 @@ const APPS_DIR = path.join(ROOT_DIR, 'apps');
 const RESERVED_NAMES = ['api', 'web', 'mobile', 'desktop'];
 const COMMON_EXCLUDE = ['node_modules', '.turbo', 'dist'];
 
+function detectCurrentScope(): string {
+  const packagesDir = path.join(ROOT_DIR, 'packages');
+  const entries = fs.readdirSync(packagesDir, { withFileTypes: true });
+
+  for (const entry of entries) {
+    if (!entry.isDirectory()) continue;
+    const pkgPath = path.join(packagesDir, entry.name, 'package.json');
+    if (!fs.existsSync(pkgPath)) continue;
+
+    const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8'));
+    const match = (pkg.name as string).match(/^(@[^/]+)\//);
+    if (match) return match[1];
+  }
+
+  throw new Error('Cannot detect package scope. Ensure at least one package in packages/ has a scoped name.');
+}
+
+const SCOPE = detectCurrentScope();
+
 const TEMPLATES: Record<string, TemplateConfig> = {
   mobile: {
     description: 'Expo React Native mobile app',
     source: path.join(TEMPLATES_DIR, 'mobile'),
     exclude: [...COMMON_EXCLUDE, '.expo'],
     jsonUpdates: {
-      'package.json': [{ path: 'name', value: (appName) => `@repo/${appName}` }],
+      'package.json': [{ path: 'name', value: appName => `${SCOPE}/${appName}` }],
       'app.json': [
-        { path: 'expo.name', value: (appName) => appName },
-        { path: 'expo.slug', value: (appName) => appName },
-        { path: 'expo.scheme', value: (appName) => appName },
+        { path: 'expo.name', value: appName => appName },
+        { path: 'expo.slug', value: appName => appName },
+        { path: 'expo.scheme', value: appName => appName },
       ],
     },
     textReplacements: {
-      'CLAUDE.md': [{ from: 'template-mobile', to: (appName) => appName }],
+      'CLAUDE.md': [{ from: 'template-mobile', to: appName => appName }],
     },
   },
   desktop: {
@@ -84,12 +103,12 @@ const TEMPLATES: Record<string, TemplateConfig> = {
     exclude: [...COMMON_EXCLUDE, '.webpack', 'out'],
     jsonUpdates: {
       'package.json': [
-        { path: 'name', value: (appName) => `@repo/${appName}` },
-        { path: 'productName', value: (appName) => appName },
+        { path: 'name', value: appName => `${SCOPE}/${appName}` },
+        { path: 'productName', value: appName => appName },
       ],
     },
     textReplacements: {
-      'CLAUDE.md': [{ from: 'template-desktop', to: (appName) => appName }],
+      'CLAUDE.md': [{ from: 'template-desktop', to: appName => appName }],
     },
   },
   web: {
@@ -97,10 +116,10 @@ const TEMPLATES: Record<string, TemplateConfig> = {
     source: path.join(TEMPLATES_DIR, 'web'),
     exclude: [...COMMON_EXCLUDE, '.next'],
     jsonUpdates: {
-      'package.json': [{ path: 'name', value: (appName) => `@repo/${appName}` }],
+      'package.json': [{ path: 'name', value: appName => `${SCOPE}/${appName}` }],
     },
     textReplacements: {
-      'CLAUDE.md': [{ from: 'template-web', to: (appName) => appName }],
+      'CLAUDE.md': [{ from: 'template-web', to: appName => appName }],
     },
   },
   api: {
@@ -108,10 +127,10 @@ const TEMPLATES: Record<string, TemplateConfig> = {
     source: path.join(TEMPLATES_DIR, 'api'),
     exclude: [...COMMON_EXCLUDE],
     jsonUpdates: {
-      'package.json': [{ path: 'name', value: (appName) => `@repo/${appName}` }],
+      'package.json': [{ path: 'name', value: appName => `${SCOPE}/${appName}` }],
     },
     textReplacements: {
-      'CLAUDE.md': [{ from: 'template-api', to: (appName) => appName }],
+      'CLAUDE.md': [{ from: 'template-api', to: appName => appName }],
     },
     prompts: [
       {
@@ -288,7 +307,7 @@ function updateJsonFile(
   filePath: string,
   updates: JsonUpdate[],
   appName: string,
-  context?: Record<string, unknown>,
+  context?: Record<string, unknown>
 ): void {
   if (!fs.existsSync(filePath)) {
     return;
@@ -420,7 +439,7 @@ async function rollback(state: RollbackState, appPath: string | null): Promise<v
 }
 
 function runCommand(command: string, args: string[], cwd: string): Promise<{ success: boolean; output: string }> {
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     const proc = spawn(command, args, {
       cwd,
       shell: true,
@@ -429,19 +448,19 @@ function runCommand(command: string, args: string[], cwd: string): Promise<{ suc
 
     let output = '';
 
-    proc.stdout?.on('data', (data) => {
+    proc.stdout?.on('data', data => {
       output += data.toString();
     });
 
-    proc.stderr?.on('data', (data) => {
+    proc.stderr?.on('data', data => {
       output += data.toString();
     });
 
-    proc.on('close', (code) => {
+    proc.on('close', code => {
       resolve({ success: code === 0, output });
     });
 
-    proc.on('error', (error) => {
+    proc.on('error', error => {
       resolve({ success: false, output: error.message });
     });
   });
@@ -455,7 +474,7 @@ async function runVerification(appName: string, _appPath: string, template: stri
   const lintSpinner = ora(`Running lint for ${appName}...`).start();
   currentSpinner = lintSpinner;
 
-  const lintResult = await runCommand('pnpm', ['-F', `@repo/${appName}`, 'lint'], ROOT_DIR);
+  const lintResult = await runCommand('pnpm', ['-F', `${SCOPE}/${appName}`, 'lint'], ROOT_DIR);
   if (!lintResult.success) {
     lintSpinner.fail(`Lint failed for ${appName}`);
     console.error(pc.red('\nLint output:'));
@@ -465,7 +484,9 @@ async function runVerification(appName: string, _appPath: string, template: stri
   lintSpinner.succeed(`Lint passed for ${appName}`);
 
   if (template === 'desktop' || template === 'mobile') {
-    console.log(pc.dim(`Skipped: build verification (${template} uses ${template === 'desktop' ? 'package/make' : 'EAS Build'})`));
+    console.log(
+      pc.dim(`Skipped: build verification (${template} uses ${template === 'desktop' ? 'package/make' : 'EAS Build'})`)
+    );
     currentSpinner = null;
     return true;
   }
@@ -473,7 +494,7 @@ async function runVerification(appName: string, _appPath: string, template: stri
   const buildSpinner = ora(`Building ${appName}...`).start();
   currentSpinner = buildSpinner;
 
-  const buildResult = await runCommand('turbo', ['run', 'build', `--filter=@repo/${appName}`], ROOT_DIR);
+  const buildResult = await runCommand('turbo', ['run', 'build', `--filter=${SCOPE}/${appName}`], ROOT_DIR);
   if (!buildResult.success) {
     buildSpinner.fail(`Build failed for ${appName}`);
     console.error(pc.red('\nBuild output:'));
@@ -662,8 +683,10 @@ function printNextSteps(appName: string, template: string): void {
       console.log(`    - Set up app icons and splash screen in ${pc.bold('assets/')} directory`);
       console.log(`\n  ${pc.cyan(pc.bold('⚠ Turborepo TUI compatibility:'))}`);
       console.log(`    Mobile apps don't work well with Turborepo TUI.`);
-      console.log(`    Add a filter to exclude this app from the root ${pc.bold('dev')} script in ${pc.bold('package.json')}:`);
-      console.log(`    ${pc.green(`"dev": "turbo dev --filter=!@repo/${appName}"`)}`);
+      console.log(
+        `    Add a filter to exclude this app from the root ${pc.bold('dev')} script in ${pc.bold('package.json')}:`
+      );
+      console.log(`    ${pc.green(`"dev": "turbo dev --filter=!${SCOPE}/${appName}"`)}`);
       console.log(`    Run separately with: ${pc.green(`pnpm ${appName} dev`)}`);
       break;
     case 'desktop':
@@ -674,8 +697,10 @@ function printNextSteps(appName: string, template: string): void {
       console.log(`    ${pc.dim('Note: Ports have been auto-allocated to avoid conflicts')}`);
       console.log(`\n  ${pc.cyan(pc.bold('⚠ Turborepo TUI compatibility:'))}`);
       console.log(`    Electron apps don't work well with Turborepo TUI.`);
-      console.log(`    Add a filter to exclude this app from the root ${pc.bold('dev')} script in ${pc.bold('package.json')}:`);
-      console.log(`    ${pc.green(`"dev": "turbo dev --filter=!@repo/${appName}"`)}`);
+      console.log(
+        `    Add a filter to exclude this app from the root ${pc.bold('dev')} script in ${pc.bold('package.json')}:`
+      );
+      console.log(`    ${pc.green(`"dev": "turbo dev --filter=!${SCOPE}/${appName}"`)}`);
       console.log(`    Run separately with: ${pc.green(`pnpm ${appName} dev`)}`);
       break;
     case 'web':
@@ -778,7 +803,9 @@ async function main(): Promise<void> {
     process.exit(0);
   }
 
-  console.log(`\n${pc.bold('Creating')} ${pc.cyan(appName)} ${pc.bold('from')} ${pc.cyan(template)} ${pc.bold('template...')}\n`);
+  console.log(
+    `\n${pc.bold('Creating')} ${pc.cyan(appName)} ${pc.bold('from')} ${pc.cyan(template)} ${pc.bold('template...')}\n`
+  );
 
   try {
     const copySpinner = ora('Copying template files...').start();
@@ -874,7 +901,9 @@ async function main(): Promise<void> {
     } else {
       console.log(pc.yellow('\nSkipped: pnpm install (use --skip-install was set)'));
       console.log(pc.yellow('Skipped: Verification (lint, build)'));
-      console.log(pc.dim('Run "pnpm install" manually, then "pnpm ' + appName + ' lint" and "pnpm ' + appName + ' build"'));
+      console.log(
+        pc.dim('Run "pnpm install" manually, then "pnpm ' + appName + ' lint" and "pnpm ' + appName + ' build"')
+      );
     }
 
     currentSpinner = null;
@@ -906,7 +935,7 @@ process.on('SIGINT', async () => {
   process.exit(130);
 });
 
-main().catch((error) => {
+main().catch(error => {
   console.error(pc.red('Unexpected error:'), error);
   process.exit(1);
 });

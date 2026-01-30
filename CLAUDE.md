@@ -35,6 +35,7 @@ pnpm my-api prisma db push  # Push schema changes
 pnpm create-app <name> --from <template>  # Create new app from template
 pnpm create-app --list                    # List available templates
 pnpm create-app                           # Interactive mode
+pnpm rename-scope <scope>    # Change @repo/ package scope (e.g., pnpm rename-scope mycompany)
 
 # Package-specific (use pnpm <package> <command>)
 pnpm my-api test:unit       # API unit tests
@@ -281,6 +282,13 @@ SWAGGER_PASSWORD=xxx
 
 1. Add keys to `apps/my-web/src/messages/en.json` and `ko.json`
 2. Use `useTranslations()` hook from `next-intl`
+
+### Change package scope
+
+1. Run `pnpm rename-scope <new-scope>` (e.g., `pnpm rename-scope mycompany`)
+2. Run `pnpm install` to reinstall dependencies
+3. Run `pnpm build` to verify the build
+4. Or use Claude Code command: `/rename-scope mycompany`
 
 ### Add a new app using CLI generator
 

@@ -40,6 +40,7 @@ This template creates a complete monorepo with:
 <br>
 
 ## Usage
+
 ### Interactive Mode
 
 ```bash
@@ -86,6 +87,34 @@ pnpm setup:local
 pnpm dev
 ```
 
+<br>
+
+## Customize Package Scope
+
+기본 패키지 스코프는 `@repo/` 입니다. 원하는 스코프로 변경할 수 있습니다:
+
+### Using CLI Script
+
+```bash
+# Preview changes (dry-run)
+pnpm rename-scope mycompany --dry-run
+
+# Apply changes (@repo/ → @mycompany/)
+pnpm rename-scope mycompany
+
+# Reinstall dependencies after renaming
+pnpm install
+```
+
+### Using Claude Code
+
+Claude Code를 사용하는 경우, 커맨드로 간편하게 변경할 수 있습니다:
+
+```
+/rename-scope mycompany
+```
+
+Claude Code가 자동으로 드라이런, 변경, 의존성 재설치, 빌드 검증까지 수행합니다.
 
 ### Available Commands
 

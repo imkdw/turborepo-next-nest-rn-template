@@ -86,7 +86,7 @@ ${pc.bold('Examples:')}
   npx create-turborepo-full-stack-template my-app
   npx create-turborepo-full-stack-template my-app --skip-install
 
-${pc.bold('What\'s included:')}
+${pc.bold("What's included:")}
   ${pc.cyan('apps/<project-name>-api')}      NestJS 11 backend API
   ${pc.cyan('apps/<project-name>-web')}      Next.js 16 web frontend
   ${pc.cyan('apps/<project-name>-app')}      Expo 54 mobile app
@@ -137,7 +137,8 @@ function validateProjectName(name: string): { valid: boolean; error?: string } {
   if (!validPattern.test(name)) {
     return {
       valid: false,
-      error: 'Project name must be lowercase, start with a letter, and only contain alphanumeric characters and hyphens',
+      error:
+        'Project name must be lowercase, start with a letter, and only contain alphanumeric characters and hyphens',
     };
   }
 
@@ -145,13 +146,16 @@ function validateProjectName(name: string): { valid: boolean; error?: string } {
 }
 
 function toKebabCase(str: string): string {
-  return str.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  return str
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
 }
 
 function toPascalCase(str: string): string {
   return str
     .split(/[-_\s]+/)
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
     .join('');
 }
 
@@ -170,7 +174,7 @@ async function downloadTemplate(projectPath: string): Promise<void> {
 
     // Verify download was successful by checking for essential files
     const essentialFiles = ['package.json', 'pnpm-workspace.yaml', 'turbo.json'];
-    const missingFiles = essentialFiles.filter((file) => !fs.existsSync(path.join(projectPath, file)));
+    const missingFiles = essentialFiles.filter(file => !fs.existsSync(path.join(projectPath, file)));
 
     if (missingFiles.length > 0) {
       throw new Error(`Template download incomplete. Missing files: ${missingFiles.join(', ')}`);
@@ -381,12 +385,10 @@ function cleanupTemplate(projectPath: string): void {
   // Remove template-specific files and directories
   const filesToRemove = [
     '.sisyphus',
-    '.claude',
-    // GitHub workflow for NPM publishing (specific to CLI package)
+    '.omc',
+    '.claude/settings.json',
     '.github/workflows/publish.yml',
-    // Lock file should be regenerated
     'pnpm-lock.yaml',
-    // Build artifacts
     'tsconfig.tsbuildinfo',
   ];
 
@@ -404,7 +406,7 @@ function cleanupTemplate(projectPath: string): void {
   }
 
   // Remove tsbuildinfo files from all subdirectories
-  const tsbuildInfoFiles = getAllFiles(projectPath).filter((f) => f.endsWith('.tsbuildinfo'));
+  const tsbuildInfoFiles = getAllFiles(projectPath).filter(f => f.endsWith('.tsbuildinfo'));
   for (const file of tsbuildInfoFiles) {
     fs.rmSync(file, { force: true });
   }
@@ -431,14 +433,14 @@ async function installDependencies(projectPath: string): Promise<boolean> {
   console.log(pc.cyan('→') + ' Installing dependencies...');
   console.log(pc.dim('  This may take a few minutes...'));
 
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     const proc = spawn('pnpm', ['install'], {
       cwd: projectPath,
       stdio: 'inherit',
       shell: true,
     });
 
-    proc.on('close', (code) => {
+    proc.on('close', code => {
       if (code === 0) {
         console.log(pc.green('✓') + ' Dependencies installed');
         resolve(true);
@@ -478,6 +480,12 @@ function printNextSteps(projectName: string, skipInstall: boolean): void {
   console.log(`  ${pc.cyan('pnpm')} build             ${pc.dim('# Build all packages')}`);
   console.log(`  ${pc.cyan('pnpm')} lint              ${pc.dim('# Lint all packages')}`);
   console.log(`  ${pc.cyan('pnpm')} test              ${pc.dim('# Run all tests')}`);
+  console.log('');
+  console.log(pc.bold('Customize package scope:'));
+  console.log('');
+  console.log(`  ${pc.dim('Default scope is')} ${pc.cyan('@repo/')}`);
+  console.log(`  ${pc.cyan('pnpm')} rename-scope mycompany   ${pc.dim('# Change @repo/ to @mycompany/')}`);
+  console.log(`  ${pc.dim('Or use Claude Code:')} ${pc.cyan('/rename-scope mycompany')}`);
   console.log('');
   console.log(pc.bold('App-specific commands:'));
   console.log('');
@@ -531,7 +539,7 @@ async function main(): Promise<void> {
       initial: DEFAULT_PROJECT_NAME,
       validate: (value: string) => {
         const result = validateProjectName(value);
-        return result.valid ? true : result.error ?? 'Invalid name';
+        return result.valid ? true : (result.error ?? 'Invalid name');
       },
     });
 
@@ -584,7 +592,7 @@ async function main(): Promise<void> {
   }
 }
 
-main().catch((error) => {
+main().catch(error => {
   console.error(pc.red('Unexpected error:'), error);
   process.exit(1);
 });
